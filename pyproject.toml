@@ -8,12 +8,15 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
+skyfield = "^1.49"
+requests = "^2.32.3"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.6.7"
 mypy = "^1.11.2"
 pyupgrade = "^3.17.0"
 pre-commit = "^3.8.0"
+skyfield = "^1.49"
 
 [build-system]
 requires = ["poetry-core"]
