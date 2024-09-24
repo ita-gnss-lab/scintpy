@@ -1,4 +1,4 @@
-from skyfield.api import Loader  # type: ignore
+from skyfield.api import Loader
 
 name = "gnss.csv"  # File Name
 
