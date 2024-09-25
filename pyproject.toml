@@ -16,11 +16,14 @@ ruff = "^0.6.7"
 mypy = "^1.11.2"
 pyupgrade = "^3.17.0"
 pre-commit = "^3.8.0"
-skyfield = "^1.49"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+ignore_missing_imports = true
+disable_error_code = ["import-untyped"]
 
 [tool.ruff]
 # Exclude a variety of commonly ignored directories.
