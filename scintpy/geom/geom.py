@@ -1,0 +1,1 @@
+"""`geom.py` module docstring."""

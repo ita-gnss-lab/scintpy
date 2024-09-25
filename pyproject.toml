@@ -56,6 +56,7 @@ exclude = [
 select = [
     "B", # `flake8-bugbear` (B) - common bugs and design issues
     "C", # Pylint (PL) - Convention (C) - Complexity checks (e.g., McCabe complexity)
+    "D", # `pydocstyle` (D) - Docstring conventions (e.g., missing or incorrectly formatted docstrings)
     "E", # Pylint (PL) - Error (E) - (e.g., syntax, whitespace)
     "W", # Pylint (PL) - Warning (W) - Warnings for certain Python style guide deviations
     "F", # Pyflakes (F) - Checks for undefined or unused variables (`flake8`-like warnings)
@@ -65,5 +66,16 @@ select = [
 ignore = [
     "E501" # Line too long
 ]
+
+# McCabe complexity checker configuration.
 [tool.ruff.lint.mccabe]
 max-complexity = 10
+
+# Pydocstyle convention for docstrings.
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+# Formatting settings.
+[tool.ruff.format]
+docstring-code-format = true
+docstring-code-line-length = 20

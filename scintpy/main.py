@@ -1,3 +1,5 @@
+"""`main.py` module docstring."""
+
 from .geom.tle_request import get_tle
 
 sat_id = "24876"

@@ -1,10 +1,22 @@
+"""`tle_request` module docstring."""
+
 from datetime import datetime, timedelta
 
 import requests
 
 
-# Function to comput the next day of the calendar for the space-track website request.
 def compute_end_date(start_date_str):
+    """Compute the next day of the calendar for the space-track website request.
+
+    Args:
+        start_date_str (_type_): _description_
+
+    Raises:
+        e: _description_
+
+    Returns:
+        _type_: _description_
+    """
     try:
         # Parse the input date (assuming it's in 'YYYY-MM-DD' format)
         start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
@@ -19,6 +31,14 @@ def compute_end_date(start_date_str):
 
 
 def handle_error(resp):
+    """_summary_.
+
+    Args:
+        resp (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     # Dictionary of common status codes and their meanings
     status_meanings = {
         200: "OK - The request was successful.",
@@ -40,6 +60,14 @@ def handle_error(resp):
 
 
 def process_tle_data(tle_data):
+    """_summary_.
+
+    Args:
+        tle_data (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     # Split the TLE into individual lines
     tle_lines = tle_data.strip().split("\n")
 
@@ -54,20 +82,21 @@ def process_tle_data(tle_data):
 
 
 def tle_request(sat_id, date, username, password):
-    """
-    Fetch TLE data for a given satellite ID within a start and end date range using the TLE format.
+    """Fetch TLE data for a given satellite ID within a start and end date range using the TLE format.
 
-    Parameters:
-    sat_id (str): NORAD catalog ID of the satellite.
-    start_date (str): Start date in 'YYYY-MM-DD' format.
-    end_date (str): End date in 'YYYY-MM-DD' format.
-    username (str): Username for space-track.org.
-    password (str): Password for space-track.org.
+    Args:
+        sat_id (str): NORAD catalog ID of the satellite.
+        date (str): Start date in 'YYYY-MM-DD' format.
+        end_date (str): End date in 'YYYY-MM-DD' format.
+        username (str): Username for space-track.org.
+        password (str): Password for space-track.org.
+
+    Raises:
+        Exception: _description_
 
     Returns:
-    str: The TLE data in text format or an empty string if the request fails.
+        str: The TLE data in text format or an empty string if the request fails.
     """
-
     # API base and TLE query endpoint
     uriBase = "https://www.space-track.org"
     requestLogin = "/ajaxauth/login"
@@ -90,6 +119,17 @@ def tle_request(sat_id, date, username, password):
 
 
 def get_tle(sat_id: str, date: str, username: str, password: str) -> str:
+    """_summary_.
+
+    Args:
+        sat_id (str): _description_
+        date (str): _description_
+        username (str): _description_
+        password (str): _description_
+
+    Returns:
+        str: _description_
+    """
     downlodaded_tle = tle_request(sat_id, date, username, password)
     chosen_tle = process_tle_data(downlodaded_tle)
     return chosen_tle

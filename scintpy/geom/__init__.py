@@ -1,0 +1,1 @@
+"""`geom` package docstring."""
