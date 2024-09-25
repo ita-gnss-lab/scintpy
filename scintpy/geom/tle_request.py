@@ -23,7 +23,7 @@ def handle_error(resp):
     status_meanings = {
         200: "OK - The request was successful.",
         201: "Created - A resource was created.",
-        204: "No Content - The request was successful, but there is no content. Please, verify if the Date and Satellite ID selected are correct",
+        204: "No Content - The request was successful, but there is no content. Please, verify if the Date and Satellite ID selected are correct.",
         400: "Bad Request - The request was invalid.",
         401: "Unauthorized - Authentication failed.",
         403: "Forbidden - You do not have permission.",
