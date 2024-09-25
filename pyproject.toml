@@ -52,9 +52,6 @@ exclude = [
     "venv",
 ]
 
-# Same as Black.
-line-length = 88
-
 [tool.ruff.lint]
 select = [
     "B", # `flake8-bugbear` (B) - common bugs and design issues
@@ -64,6 +61,9 @@ select = [
     "F", # Pyflakes (F) - Checks for undefined or unused variables (`flake8`-like warnings)
     "I", # isort (I) - Import-related checks (e.g., checking for order or unused imports)
     "Q", # `flake8-quotes` (Q) - Checks for quotes consistency (single vs. double quotes)
+]
+ignore = [
+    "E501" # Line too long
 ]
 [tool.ruff.lint.mccabe]
 max-complexity = 10

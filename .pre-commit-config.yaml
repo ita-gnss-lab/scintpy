@@ -19,3 +19,11 @@ repos:
     rev: v3.17.0
     hooks:
     -   id: pyupgrade
+
+-   repo: local
+    hooks:
+      -   id: check-python-filenames
+          name: Check Python filenames for snake_case
+          entry: bash -c 'for f in $(git diff --cached --name-only | grep .py); do filename=$(basename "$f"); if [[ ! $filename =~ ^[a-z_]+\.py$ ]]; then echo "Filename $f does not follow PEP 8 snake_case naming convention"; exit 1; fi; done'
+          language: system
+          types: [python]
