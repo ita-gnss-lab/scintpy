@@ -1,7 +1,5 @@
 """`main.py` module docstring."""
 
-import re
-
 import geom.tle_download
 import numpy as np
 
@@ -14,23 +12,6 @@ username = "rdlfresearch@gmail.com"
 password = "dustrodrigo15304931"
 
 tles = geom.tle_download.tle_request(sat_ids, dateTime, username, password)
-eachTle = tles.splitlines()
-noradIdsAfter = re.findall(r"1 (\d{5})", tles)
-
-# To find duplicates
-seen = set()
-duplicates = set()
-
-for id in noradIdsAfter:
-    if id in seen:
-        duplicates.add(id)
-    else:
-        seen.add(id)
-
-# Print duplicate IDs
-if duplicates:
-    print(f"Duplicate NORAD IDs found: {duplicates}")
-else:
-    print("No duplicate NORAD IDs found.")
+tles_list = geom.tle_download.post_process_tle_from_api(tles)
 
 bp = 1

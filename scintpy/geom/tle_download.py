@@ -8,13 +8,13 @@ from requests.models import Response
 
 
 def handle_error(resp):
-    """_summary_.
+    """Show the correct error message related to the status of the api request.
 
     Args:
-        resp (_type_): _description_
+        resp (datetime): response of the api
 
     Returns:
-        _type_: _description_
+        error_message (str): error message to be shown
     """
     # Dictionary of common status codes and their meanings
     status_meanings = {
@@ -33,7 +33,8 @@ def handle_error(resp):
     # Get the status code meaning, default to a generic message if unknown
     status_message = status_meanings.get(resp.status_code, "Unknown error occurred")
     # Present a better error message
-    return f"Error {resp.status_code}: {status_message}"
+    error_message = f"Error {resp.status_code}: {status_message}"
+    return error_message
 
 
 def compute_end_date(start_date_str):
@@ -109,7 +110,7 @@ def tle_request(sat_ids: str, date: list[int], username: str, password: str) -> 
     # API base and TLE query endpoint
     uriBase: str = "https://www.space-track.org"
     requestLogin: str = "/ajaxauth/login"
-    requestTLE: str = f"/basicspacedata/query/class/gp_history/NORAD_CAT_ID/{sat_ids}/EPOCH/{startDate}--{compute_end_date(startDate)}/format/tle/distinct/true/emptyresult/show"
+    requestTLE: str = f"/basicspacedata/query/class/gp_history/NORAD_CAT_ID/{sat_ids}/orderby/TLE_LINE1%20ASC//EPOCH/{startDate}--{compute_end_date(startDate)}/format/3le/emptyresult/show"
 
     # Define login credentials directly
     siteCred: dict = {"identity": username, "password": password}
@@ -124,3 +125,25 @@ def tle_request(sat_ids: str, date: list[int], username: str, password: str) -> 
         errorMessage = handle_error(resp)
         raise Exception(errorMessage)
     return resp.text
+
+
+def post_process_tle_from_api(text):
+    """_summary_.
+
+    Args:
+        text (_type_): _description_
+    """
+    sliced_tle_lines: list = text.splitlines()
+    tle_list_size: int = int(len(sliced_tle_lines) / 3)
+    tle_list: list[str] = ["str"] * tle_list_size
+    for i in range(tle_list_size):
+        tle_list[i] = [
+            sliced_tle_lines[i * 3],
+            sliced_tle_lines[i * 3 + 1],
+            sliced_tle_lines[i * 3 + 2],
+        ]
+    return tle_list
+
+
+# def find_duplicates(tle_list):
+#     for i in range(length())
