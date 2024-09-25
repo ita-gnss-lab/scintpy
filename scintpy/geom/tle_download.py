@@ -1,33 +1,10 @@
-"""`tle_request` module docstring."""
+"""`tle_download module docstring."""
 
+import re
 from datetime import datetime, timedelta
 
 import requests
-
-
-def compute_end_date(start_date_str):
-    """Compute the next day of the calendar for the space-track website request.
-
-    Args:
-        start_date_str (_type_): _description_
-
-    Raises:
-        e: _description_
-
-    Returns:
-        _type_: _description_
-    """
-    try:
-        # Parse the input date (assuming it's in 'YYYY-MM-DD' format)
-        start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
-        # Add one day using timedelta
-        end_date = start_date + timedelta(days=1)
-        # Format the result back to a string if needed
-        return end_date.strftime("%Y-%m-%d")
-    except ValueError as e:
-        # Print the error message and raise the exception to stop execution
-        print("Error: Invalid date format. Please use 'YYYY-MM-DD'.")
-        raise e  # Re-raise the exception to break the code
+from requests.models import Response
 
 
 def handle_error(resp):
@@ -59,33 +36,61 @@ def handle_error(resp):
     return f"Error {resp.status_code}: {status_message}"
 
 
-def process_tle_data(tle_data):
-    """_summary_.
+def compute_end_date(start_date_str):
+    """Compute the next day of the calendar for the space-track website request.
 
     Args:
-        tle_data (_type_): _description_
+        start_date_str (_type_): _description_
+
+    Raises:
+        e: _description_
 
     Returns:
         _type_: _description_
     """
-    # Split the TLE into individual lines
-    tle_lines = tle_data.strip().split("\n")
+    try:
+        # Parse the input date (assuming it's in 'YYYY-MM-DD' format)
+        start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
+        # Add one day using timedelta
+        end_date = start_date + timedelta(days=1)
+        # Format the result back to a string if needed
+        return end_date.strftime("%Y-%m-%d")
+    except ValueError as e:
+        # Print the error message and raise the exception to stop execution
+        print("Error: Invalid date format. Please use 'YYYY-MM-DD'.")
+        raise e  # Re-raise the exception to break the code
 
-    # Assuming TLEs are given in pairs (two lines per TLE), group them
-    tles = [(tle_lines[i], tle_lines[i + 1]) for i in range(0, len(tle_lines), 2)]
 
-    # You can add logic here to filter TLEs based on specific criteria.
-    # For example, we can choose the last TLE (most recent) for simplicity:
-    chosen_tle = tles[-1]  # This picks the last TLE
+def gnss_NORAD_ID_acquire() -> list[list]:
+    """Get all current operating GNSS satellites available at Celestrak website.
 
-    return chosen_tle
+    Args:
+        empty
+
+    Raises:
+        e: _description_
+
+    Returns:
+        IDmatrix (str): Matrix with two rows corresponding to the satellite name and NORAD_CAT_ID respectively.
+    """
+    with requests.Session() as session:
+        url = "https://celestrak.org/NORAD/elements/gp.php?GROUP=gnss&FORMAT=3le"
+        celestrak_resp: Response = session.get(url)
+
+    if celestrak_resp.status_code != 200:
+        errorMessage = handle_error(celestrak_resp)
+        raise Exception(errorMessage)
+    else:
+        matches: list[tuple] = re.findall(r"(\S+.*)\r\n1 (\d+)", celestrak_resp.text)
+        IDmatrix: list[list] = [[match[0], match[1]] for match in matches]
+        return IDmatrix
 
 
-def tle_request(sat_id, date, username, password):
+def tle_request(sat_ids: str, date: list[int], username: str, password: str) -> str:
     """Fetch TLE data for a given satellite ID within a start and end date range using the TLE format.
 
     Args:
-        sat_id (str): NORAD catalog ID of the satellite.
+        sat_ids (str): NORAD catalog ID of the satellite.
         date (str): Start date in 'YYYY-MM-DD' format.
         end_date (str): End date in 'YYYY-MM-DD' format.
         username (str): Username for space-track.org.
@@ -97,13 +102,17 @@ def tle_request(sat_id, date, username, password):
     Returns:
         str: The TLE data in text format or an empty string if the request fails.
     """
+    generalDate: datetime = datetime(
+        date[0], date[1], date[2], date[3], date[4], date[5]
+    )
+    startDate: str = generalDate.strftime("%Y-%m-%d")
     # API base and TLE query endpoint
-    uriBase = "https://www.space-track.org"
-    requestLogin = "/ajaxauth/login"
-    requestTLE = f"/basicspacedata/query/class/gp_history/NORAD_CAT_ID/{sat_id}/orderby/TLE_LINE1%20ASC/EPOCH/{date}--{compute_end_date(date)}/format/tle"
+    uriBase: str = "https://www.space-track.org"
+    requestLogin: str = "/ajaxauth/login"
+    requestTLE: str = f"/basicspacedata/query/class/gp_history/NORAD_CAT_ID/{sat_ids}/EPOCH/{startDate}--{compute_end_date(startDate)}/format/tle/distinct/true/emptyresult/show"
 
     # Define login credentials directly
-    siteCred = {"identity": username, "password": password}
+    siteCred: dict = {"identity": username, "password": password}
 
     with requests.Session() as session:
         # Login to space-track.org
@@ -114,22 +123,4 @@ def tle_request(sat_id, date, username, password):
     if resp.status_code != 200:
         errorMessage = handle_error(resp)
         raise Exception(errorMessage)
-
     return resp.text
-
-
-def get_tle(sat_id: str, date: str, username: str, password: str) -> str:
-    """_summary_.
-
-    Args:
-        sat_id (str): _description_
-        date (str): _description_
-        username (str): _description_
-        password (str): _description_
-
-    Returns:
-        str: _description_
-    """
-    downlodaded_tle = tle_request(sat_id, date, username, password)
-    chosen_tle = process_tle_data(downlodaded_tle)
-    return chosen_tle
