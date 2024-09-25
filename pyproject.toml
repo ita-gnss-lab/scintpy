@@ -22,38 +22,15 @@ skyfield = "^1.49"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.ruff]
-# Exclude a variety of commonly ignored directories.
-exclude = [
-    ".bzr",
-    ".direnv",
-    ".eggs",
-    ".git",
-    ".git-rewrite",
-    ".hg",
-    ".mypy_cache",
-    ".nox",
-    ".pants.d",
-    ".pytype",
-    ".ruff_cache",
-    ".svn",
-    ".tox",
-    ".venv",
-    "__pypackages__",
-    "_build",
-    "buck-out",
-    "build",
-    "dist",
-    "node_modules",
-    "venv",
-]
-
-# Same as Black.
-line-length = 88
-
 [tool.ruff.lint]
-ignore = ["E501"]
-select = ["B","C","E","F","W","B9", "I", "Q"]
-
+select = [
+    "B", # `flake8-bugbear` (B) - common bugs and design issues
+    "C", # Pylint (PL) - Convention (C) - Complexity checks (e.g., McCabe complexity)
+    "E", # Pylint (PL) - Error (E) - (e.g., syntax, whitespace)
+    "W", # Pylint (PL) - Warning (W) - Warnings for certain Python style guide deviations
+    "F", # Pyflakes (F) - Checks for undefined or unused variables (`flake8`-like warnings)
+    "I", # isort (I) - Import-related checks (e.g., checking for order or unused imports)
+    "Q", # `flake8-quotes` (Q) - Checks for quotes consistency (single vs. double quotes)
+]
 [tool.ruff.lint.mccabe]
 max-complexity = 10

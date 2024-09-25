@@ -8,6 +8,6 @@ url = (
 )  # Aiming GNSS satellite orbits files with csv format
 load_ = Loader(
     "scintpy/skyfield-data"
-)  # Sets the data directory to keep everything organized  # noqa: F811
+)  # Sets the data directory to keep everything organized
 load_.download(url, filename=name)  # Downloads all gnss available orbits
 # type: ignore
