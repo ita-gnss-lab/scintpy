@@ -22,8 +22,8 @@ repos:
 
 -   repo: local
     hooks:
-      -   id: check-python-filenames
-          name: Check Python file and directory names for snake_case
-          entry: filenames must be lower-case or lower_case only
-          language: fail
-          files: '[^a-z0-9._/-]'
+    -   id: pep8-naming-convention
+        name: PEP 8 snake case naming convention
+        entry: File and dir names must follow PEP 8 snake case naming convention.
+        language: fail
+        files: '^(?![_a-z0-9/]+\.py$).*\.py'
