@@ -1,3 +1,7 @@
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
 [tool.poetry]
 name = "scintpy"
 version = "0.1.0"
@@ -8,7 +12,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-skyfield = "^1.49"
+skyfield = ">=1.49"
 requests = "^2.32.3"
 
 [tool.poetry.group.dev.dependencies]
@@ -17,9 +21,6 @@ mypy = "^1.11.2"
 pyupgrade = "^3.17.0"
 pre-commit = "^3.8.0"
 
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
 
 [tool.mypy]
 ignore_missing_imports = true

@@ -1,4 +1,4 @@
-from geom.tleRequest import get_tle
+from .geom.tleRequest import get_tle
 
 sat_id = "24876"
 date = "2023-09-10"
