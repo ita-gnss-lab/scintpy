@@ -2,7 +2,7 @@
 
 import geom
 
-dateTime = [2023, 9, 10, 12, 0, 0]
+dateTime = [2023, 9, 10, 12, 0, 3]
 username = "rdlfresearch@gmail.com"
 password = "dustrodrigo15304931"
 
