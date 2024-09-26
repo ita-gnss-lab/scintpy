@@ -1,7 +1,5 @@
 """`test.py` module docstring."""
 
-# from typing import cast
-
 import numpy as np
 
 import scintpy
