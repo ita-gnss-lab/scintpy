@@ -7,7 +7,7 @@ import requests
 from requests.models import Response
 
 
-def handle_error(resp):
+def _handle_error(resp: Response) -> str:
     """Show the correct error message related to the status of the api request.
 
     Args:
@@ -37,7 +37,7 @@ def handle_error(resp):
     return error_message
 
 
-def compute_end_date(start_date_str):
+def _compute_end_date(start_date_str: str) -> str:
     """Compute the next day of the calendar for the space-track website request.
 
     Args:
@@ -62,6 +62,25 @@ def compute_end_date(start_date_str):
         raise e  # Re-raise the exception to break the code
 
 
+def post_process_tle_from_api(text: str) -> tuple[list[str], ...]:
+    """Process TLE data from API.
+
+    Args:
+        text (str): Input TLE data as a string.
+
+    Returns:
+        tuple[list[str]]: A list of lists, each containing three lines of TLE data.
+    """
+    sliced_tle_lines = text.splitlines()
+    tle_list_size = len(sliced_tle_lines) // 3
+    tle_list: tuple[list[str], ...] = ([],) * tle_list_size
+
+    for i in range(tle_list_size):
+        for j in range(3):
+            tle_list[i].append(sliced_tle_lines[i * 3 + j])
+    return tle_list
+
+
 def gnss_NORAD_ID_acquire() -> list[list]:
     """Get all current operating GNSS satellites available at Celestrak website.
 
@@ -79,7 +98,7 @@ def gnss_NORAD_ID_acquire() -> list[list]:
         celestrak_resp: Response = session.get(url)
 
     if celestrak_resp.status_code != 200:
-        errorMessage = handle_error(celestrak_resp)
+        errorMessage = _handle_error(celestrak_resp)
         raise Exception(errorMessage)
     else:
         matches: list[tuple] = re.findall(r"(\S+.*)\r\n1 (\d+)", celestrak_resp.text)
@@ -110,7 +129,7 @@ def tle_request(sat_ids: str, date: list[int], username: str, password: str) -> 
     # API base and TLE query endpoint
     uriBase: str = "https://www.space-track.org"
     requestLogin: str = "/ajaxauth/login"
-    requestTLE: str = f"/basicspacedata/query/class/gp_history/NORAD_CAT_ID/{sat_ids}/orderby/TLE_LINE1%20ASC//EPOCH/{startDate}--{compute_end_date(startDate)}/format/3le/emptyresult/show"
+    requestTLE: str = f"/basicspacedata/query/class/gp_history/NORAD_CAT_ID/{sat_ids}/orderby/TLE_LINE1%20ASC//EPOCH/{startDate}--{_compute_end_date(startDate)}/format/3le/emptyresult/show"
 
     # Define login credentials directly
     siteCred: dict = {"identity": username, "password": password}
@@ -122,27 +141,9 @@ def tle_request(sat_ids: str, date: list[int], username: str, password: str) -> 
         resp = session.get(uriBase + requestTLE)
         # Return the raw TLE text
     if resp.status_code != 200:
-        errorMessage = handle_error(resp)
+        errorMessage = _handle_error(resp)
         raise Exception(errorMessage)
     return resp.text
-
-
-def post_process_tle_from_api(text):
-    """_summary_.
-
-    Args:
-        text (_type_): _description_
-    """
-    sliced_tle_lines: list = text.splitlines()
-    tle_list_size: int = int(len(sliced_tle_lines) / 3)
-    tle_list: list[str] = ["str"] * tle_list_size
-    for i in range(tle_list_size):
-        tle_list[i] = [
-            sliced_tle_lines[i * 3],
-            sliced_tle_lines[i * 3 + 1],
-            sliced_tle_lines[i * 3 + 2],
-        ]
-    return tle_list
 
 
 # def find_duplicates(tle_list):
