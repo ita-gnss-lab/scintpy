@@ -67,12 +67,20 @@ def _compute_end_date(start_date_str: str) -> str:
         raise e  # Re-raise the exception to break the code
 
 
+def _get_celestrak_response_file_path() -> str:
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    celestrak_response_file_path = os.path.join(
+        current_dir, "..", "offline_data", "celestrak_response_text.txt"
+    )
+    return celestrak_response_file_path
+
+
 # ??? why this name? should `get_sat_ids()` be more suitable?
 def gnss_NORAD_ID_acquire(is_online: bool, is_save_response: bool = False) -> str:
     """Acquire the list of actual operating GNSS satellites from celestrak website.
 
     Args:
-        is_online (bool): `True`: Try to get a response from the online website `celestrak.org`. `False`: use the offline message.
+        is_online (bool): `True`: Try to get a response from the online website `celestrak.org`. `False`: use the cached message.
         is_save_response (bool): `True`: Save it (it will overwrite the previous `gp.txt` file). `False`: Don't save it. # ??? `gp.txt`?
 
     Raises:
@@ -81,12 +89,8 @@ def gnss_NORAD_ID_acquire(is_online: bool, is_save_response: bool = False) -> st
     Returns:
         ids (str): Comma-separated string with all operating GNSS satellittes NORAD catalog identification (NORAD_CAT_ID).
     """
-    # find the current directory path
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    # searches the path to the celestrak offline data .txt file
-    celestrak_response_file_path = os.path.join(
-        current_dir, "..", "offline_data", "celestrak_response_text.txt"
-    )
+    # path to the celestrak cached data .txt file
+    celestrak_response_file_path: str = _get_celestrak_response_file_path()
     # get a response from the online website `celestrak.org`
     if is_online:
         # request a tle list from celestrak website
@@ -104,19 +108,15 @@ def gnss_NORAD_ID_acquire(is_online: bool, is_save_response: bool = False) -> st
                     cleaned_text = re.sub(r"\s*\r\n", r"\n", celestrak_resp_text)
                     file.write(cleaned_text)
             except FileNotFoundError as e:
-                raise FileNotFoundError(
-                    f"File not found: {celestrak_response_file_path}"
-                ) from e
-    # use the offline message
+                raise FileNotFoundError("Failed to save celestrak.org response") from e
+    # use the cached message
     else:
-        # try read the offline available .txt file
+        # try read the cached available .txt file
         try:
             with open(celestrak_response_file_path) as file:
                 celestrak_resp_text = file.read()
         except FileNotFoundError as e:
-            raise FileNotFoundError(
-                f"File not found: {celestrak_response_file_path}"
-            ) from e
+            raise FileNotFoundError("Failed to read the cached data file.") from e
     # match all NORAD satellite identifiers.
     matches: list = re.findall(r"\n1 (\d+)", celestrak_resp_text)
     # comma-separated satellite IDs
