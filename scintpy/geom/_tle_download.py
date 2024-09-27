@@ -68,7 +68,7 @@ def _compute_end_date(start_date_str: str) -> str:
 
 
 # ??? why this name? should `get_sat_ids()` be more suitable?
-def gnss_NORAD_ID_acquire(is_online: bool, is_save_response: bool) -> str:
+def gnss_NORAD_ID_acquire(is_online: bool, is_save_response: bool = False) -> str:
     """Acquire the list of actual operating GNSS satellites from celestrak website.
 
     Args:
