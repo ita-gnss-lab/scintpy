@@ -123,7 +123,7 @@ def gnss_NORAD_ID_acquire(is_online: bool, is_cache_response: bool = False) -> s
 
 def tle_request(
     sat_ids: str,
-    date_time: tuple[int, int, int],
+    date_time: list[int],
     username: str,
     password: str,
     is_online: bool,
@@ -149,10 +149,7 @@ def tle_request(
     space_track_response_file_path: str = _get_cache_file_path("space_track")
     # get a response from the online website `space-track.org`
     if is_online:
-        # Ensure date_time has at least 3 elements
-        if len(date_time) < 3:
-            raise ValueError("Date time must contain at least year, month, and day.")
-        general_date: datetime = datetime(*date_time[:3])
+        general_date: datetime = datetime(date_time[0], date_time[1], date_time[2])
         start_date: str = general_date.strftime("%Y-%m-%d")
         # API base and TLE query endpoint
         uri_base = "https://www.space-track.org"

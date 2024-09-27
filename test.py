@@ -2,8 +2,7 @@
 
 import scintpy
 
-# TODO: understand why `mypy` prompts an error when `(2023, 9, 10, 12, 0, 3)` is passed to `tle_request()`
-date_time = (2023, 9, 10)  # , 12, 0, 3
+date_time = [2023, 9, 10, 12, 0, 3]
 username = "rdlfresearch@gmail.com"
 password = "dustrodrigo15304931"
 
