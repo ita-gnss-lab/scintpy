@@ -225,6 +225,15 @@ def tle_epoch_to_datetime(tle_epoch: str) -> datetime:
 
 
 def remove_duplicates(raw_tle_lines: list[str], date_time: list[int]) -> list[str]:
+    """This function receives the raw tle lines from tle_request function and removes its duplicated tles, keeping only the tles with the minor absolute difference between the user's input date and time and its epoch.
+
+    Args:
+        raw_tle_lines (list[str]): raw tle lines from tle_request function
+        date_time (list[int]): user's input date and time
+
+    Returns:
+        list[str]: compacted version of the tle lines without the duplicates.
+    """
     user_date_input = datetime(
         date_time[0],
         date_time[1],
