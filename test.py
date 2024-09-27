@@ -10,5 +10,7 @@ celestrak_ids = scintpy.geom.gnss_NORAD_ID_acquire(False, False)
 unprocessed_tle_list = scintpy.geom.tle_request(
     celestrak_ids, date_time, username, password, False, False
 )
-processed_tle_list = scintpy.geom.remove_duplicates(unprocessed_tle_list, date_time)
+compact_tle_list = scintpy.geom.remove_duplicates(unprocessed_tle_list, date_time)
+
+full_satellites_list = scintpy.geom.skyfield_compute_orbits(compact_tle_list)
 bp = 1
