@@ -2,7 +2,6 @@
 
 import os
 import re
-from collections import defaultdict
 from datetime import datetime, timedelta
 
 import requests
@@ -69,10 +68,10 @@ def _compute_end_date(start_date_str: str) -> str:
 
 def _get_response_file_path(filename: str) -> str:
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    celestrak_response_file_path = os.path.join(
+    rawtle_response_file_path = os.path.join(
         current_dir, "..", "offline_data", filename + "_response_text.txt"
     )
-    return celestrak_response_file_path
+    return rawtle_response_file_path
 
 
 # ??? why this name? should `get_sat_ids()` be more suitable?
@@ -126,7 +125,7 @@ def gnss_NORAD_ID_acquire(is_online: bool, is_save_response: bool = False) -> st
 
 def tle_request(
     sat_ids: str,
-    dateTime: list[int],
+    input_date: list[int],
     username: str,
     password: str,
     is_online: bool,
@@ -136,7 +135,7 @@ def tle_request(
 
     Args:
         sat_ids (str): NORAD catalog ID of the satellite.
-        dateTime (list[int]): Start date and timing in 'Year,Month,Day,Hours,Minutes,Seconds' format.
+        input_date (list[int]): Start date and timing in 'Year,Month,Day,Hours,Minutes,Seconds' format.
         username (str): Username for space-track.org.
         password (str): Password for space-track.org.
         is_online (bool): Toggle offline space-track.org response message for testing. 0 uses the offline message and 1 uses tries to get a response from the online website.
@@ -149,33 +148,32 @@ def tle_request(
         raw_tle_lines (list[str]): The TLE data in text format or an empty string if the request fails.
     """
     if is_online:
-        generalDate: datetime = datetime(dateTime[0], dateTime[1], dateTime[2])
-        startDate: str = generalDate.strftime("%Y-%m-%d")
+        user_date_input: datetime = datetime(
+            input_date[0], input_date[1], input_date[2]
+        )
+        start_date: str = user_date_input.strftime("%Y-%m-%d")
         # API base and TLE query endpoint
-        uriBase: str = "https://www.space-track.org"
-        requestLogin: str = "/ajaxauth/login"
-        requestTLE: str = f"/basicspacedata/query/class/gp_history/NORAD_CAT_ID/{sat_ids}/orderby/TLE_LINE1%20ASC//EPOCH/{startDate}--{_compute_end_date(startDate)}/format/3le/emptyresult/show"
+        uri_base: str = "https://www.space-track.org"
+        request_login: str = "/ajaxauth/login"
+        request_tle: str = f"/basicspacedata/query/class/gp_history/NORAD_CAT_ID/{sat_ids}/orderby/TLE_LINE1%20ASC//EPOCH/{start_date}--{_compute_end_date(start_date)}/format/3le/emptyresult/show"
 
         # Define login credentials directly
         siteCred: dict = {"identity": username, "password": password}
 
         with requests.Session() as session:
             # Login to space-track.org
-            resp: Response = session.post(uriBase + requestLogin, data=siteCred)
+            resp: Response = session.post(uri_base + request_login, data=siteCred)
             # Fetch TLE data for the given satellite ID and date range
-            resp = session.get(uriBase + requestTLE)
+            resp = session.get(uri_base + request_tle)
             # Return the raw TLE text
         if resp.status_code != 200:
             error_message: str = _handle_error(resp)
             raise Exception(error_message)
         space_track_text = resp.text
         if is_save_response == 1:
-            current_dir: str = os.path.dirname(os.path.abspath(__file__))
-            celestrak_response_file_path: str = os.path.join(
-                current_dir, "..", "offline_data", "space_track_response_text.txt"
-            )
+            space_track_response_file_path = _get_response_file_path("space_track")
             try:
-                with open(celestrak_response_file_path, "w") as file:
+                with open(space_track_response_file_path, "w") as file:
                     cleaned_text: str = "\n".join(
                         [
                             line.strip()
@@ -185,52 +183,87 @@ def tle_request(
                     )
                     file.write(cleaned_text + "\n")
             except FileNotFoundError:
-                print(f"File {celestrak_response_file_path} not found.")
+                print(f"File {space_track_response_file_path} not found.")
     else:
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        celestrak_response_file_path = os.path.join(
-            current_dir, "..", "offline_data", "space_track_response_text.txt"
-        )
+        space_track_response_file_path = _get_response_file_path("space_track")
         try:
-            with open(celestrak_response_file_path) as file:
+            with open(space_track_response_file_path) as file:
                 space_track_text = file.read()
         except FileNotFoundError:
-            print(f"File {celestrak_response_file_path} not found.")
+            print(f"File {space_track_response_file_path} not found.")
     raw_tle_lines: list[str] = space_track_text.splitlines()
     return raw_tle_lines
 
 
-def group_raw_tle_lines(text: list[str]) -> tuple[tuple[str, str, str], ...]:
-    """Creates a list with groups of three raw tle lines corresponding to each satellite ID requested to the API obtained from the function tle_request.
+def tle_epoch_to_datetime(tle_epoch: str) -> datetime:
+    """Convert a TLE epoch string (YYDDD.DDDDDD format) to a datetime object.
 
     Args:
-        text (list[str]): Input TLE data as a string.
+        tle_epoch (str): TLE epoch in YYDDD.DDDDDD format where:
+            - YY is the last two digits of the year.
+            - DDD is the day of the year.
+            - DDDDDD is the fractional part of the day.
 
     Returns:
-        tuple[list[str]]: A tuple of lists, each containing three lines of TLE data.
+        tle_datetime (datetime): A datetime object representing the TLE epoch.
+
     """
-    tle_list_size: int = len(text) // 3
-    tle_list_tuple: tuple[tuple[str, str, str], ...] = tuple(
-        (text[i * 3], text[i * 3 + 1], text[i * 3 + 2]) for i in range(tle_list_size)
+    year = int(tle_epoch[:2])  # First two digits are the year
+    day_of_year = float(
+        tle_epoch[2:]
+    )  # Remaining part is day of the year (including fractional part)
+    # Handle two-digit year (assumes 2000-2099; adjust if needed for different century)
+    if year < 57:  # Convention: years < 57 are assumed to be in the 2000s
+        year += 2000
+    else:
+        year += 1900
+    # Calculate the base date from the year
+    base_date = datetime(year, 1, 1)
+    # Add the day of the year (minus 1 because January 1st is the 1st day)
+    tle_datetime = base_date + timedelta(days=day_of_year - 1)
+    return tle_datetime
+
+
+def remove_duplicates(raw_tle_lines: list[str], date_time: list[int]) -> list[str]:
+    user_date_input = datetime(
+        date_time[0],
+        date_time[1],
+        date_time[2],
+        date_time[3],
+        date_time[4],
+        date_time[5],
     )
-    return tle_list_tuple
-
-
-def find_duplicates(
-    tle_list_tuple: tuple[tuple[str, str, str], ...],
-) -> defaultdict[str, list[tuple[str, str, str]]]:
-    """_summary_.
-
-    Args:
-        tle_list_tuple (tuple[list[str], ...]): _description_.
-
-    Returns:
-        grouped_tle(defaultdict[list]): _description_.
-    """
-    grouped_tle: defaultdict[str, list[tuple[str, str, str]]] = defaultdict(list)
-
-    # Group the tuples by the first element
-    for tle in tle_list_tuple:
-        identifier: str = tle[0]  # First element is the identifier
-        grouped_tle[identifier].append(tle)
-    return grouped_tle
+    current_id = ""
+    current_epoch = ""
+    previous_id = ""
+    previous_epoch = ""
+    tle_discard_list = []
+    for i in range(len(raw_tle_lines) // 3):
+        if i == 0:
+            previous_id = raw_tle_lines[i * 3]
+            previous_epoch = raw_tle_lines[i * 3 + 1][18:32]
+            abs_previous_time_diff = abs(
+                user_date_input - tle_epoch_to_datetime(previous_epoch)
+            )
+        else:
+            current_id = raw_tle_lines[i * 3]
+            current_epoch = raw_tle_lines[i * 3 + 1][18:32]
+            abs_current_time_diff = abs(
+                user_date_input - tle_epoch_to_datetime(current_epoch)
+            )
+            if current_id == previous_id:
+                if abs_current_time_diff <= abs_previous_time_diff:
+                    tle_discard_list.append(
+                        [(i - 1) * 3, (i - 1) * 3 + 1, (i - 1) * 3 + 2]
+                    )
+                else:
+                    tle_discard_list.append([i * 3, i * 3 + 1, i * 3 + 2])
+            previous_id = current_id
+            abs_previous_time_diff = abs_current_time_diff
+    formatted_tle_discard_list = [
+        index for minor_list_number in tle_discard_list for index in minor_list_number
+    ]
+    for index in sorted(formatted_tle_discard_list, reverse=True):
+        del raw_tle_lines[index]
+    compact_tle_lines = raw_tle_lines
+    return compact_tle_lines
