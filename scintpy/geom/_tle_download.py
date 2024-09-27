@@ -81,7 +81,7 @@ def gnss_NORAD_ID_acquire(is_online: bool, is_save_response: bool = False) -> st
 
     Args:
         is_online (bool): `True`: Try to get a response from the online website `celestrak.org`. `False`: use the cached message.
-        is_save_response (bool): `True`: Save it (it will overwrite the previous `gp.txt` file). `False`: Don't save it. # ??? `gp.txt`?
+        is_save_response (bool): `True`: Save it (it will overwrite the previous `celestrak_response_text.txt` file). `False`: Don't save it.
 
     Raises:
         FileNotFoundError: Show the website error code and its meaning if something wrong occurs.
@@ -129,8 +129,8 @@ def tle_request(
     dateTime: list[int],
     username: str,
     password: str,
-    online_flag: int,
-    save_api_response: int,
+    is_online: bool,
+    is_save_response: bool,
 ) -> list[str]:
     """Obtain the raw TLE lines of all operating GNSS satellites from either the offline or online celestrak NORAD ID lists from the function gnss_NORAD_ID_acquire.
 
@@ -139,16 +139,16 @@ def tle_request(
         dateTime (list[int]): Start date and timing in 'Year,Month,Day,Hours,Minutes,Seconds' format.
         username (str): Username for space-track.org.
         password (str): Password for space-track.org.
-        online_flag (int): Toggle offline space-track.org response message for testing. 0 uses the offline message and 1 uses tries to get a response from the online website.
-        save_api_response (int): Toggle saving the API response. set it as 0 to don't save it and 1 if you do want to save it. the saved file will overwrite the previous space_track_response_file
+        is_online (bool): Toggle offline space-track.org response message for testing. 0 uses the offline message and 1 uses tries to get a response from the online website.
+        is_save_response (bool): Toggle saving the API response. set it as 0 to don't save it and 1 if you do want to save it. the saved file will overwrite the previous space_track_response_file
 
     Raises:
-        Exception: Shows errors related to unavailability of space-track api data service, not being able to find the space_track_response_text.txt file or invalid save_api_response value.
+        Exception: Shows errors related to unavailability of space-track api data service, not being able to find the space_track_response_text.txt file or invalid is_save_response value.
 
     Returns:
         raw_tle_lines (list[str]): The TLE data in text format or an empty string if the request fails.
     """
-    if online_flag == 1:
+    if is_online:
         generalDate: datetime = datetime(dateTime[0], dateTime[1], dateTime[2])
         startDate: str = generalDate.strftime("%Y-%m-%d")
         # API base and TLE query endpoint
@@ -169,7 +169,7 @@ def tle_request(
             error_message: str = _handle_error(resp)
             raise Exception(error_message)
         space_track_text = resp.text
-        if save_api_response == 1:
+        if is_save_response == 1:
             current_dir: str = os.path.dirname(os.path.abspath(__file__))
             celestrak_response_file_path: str = os.path.join(
                 current_dir, "..", "offline_data", "space_track_response_text.txt"
@@ -186,9 +186,7 @@ def tle_request(
                     file.write(cleaned_text + "\n")
             except FileNotFoundError:
                 print(f"File {celestrak_response_file_path} not found.")
-        elif save_api_response != 0 or save_api_response != 1:
-            raise Exception("Invalid save_api_response value")
-    elif online_flag == 0:
+    else:
         current_dir = os.path.dirname(os.path.abspath(__file__))
         celestrak_response_file_path = os.path.join(
             current_dir, "..", "offline_data", "space_track_response_text.txt"
@@ -198,8 +196,6 @@ def tle_request(
                 space_track_text = file.read()
         except FileNotFoundError:
             print(f"File {celestrak_response_file_path} not found.")
-    else:
-        raise Exception("Invalid online_flag value")
     raw_tle_lines: list[str] = space_track_text.splitlines()
     return raw_tle_lines
 
