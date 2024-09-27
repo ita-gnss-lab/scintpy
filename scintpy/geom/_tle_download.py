@@ -67,10 +67,10 @@ def _compute_end_date(start_date_str: str) -> str:
         raise e  # Re-raise the exception to break the code
 
 
-def _get_celestrak_response_file_path() -> str:
+def _get_response_file_path(filename: str) -> str:
     current_dir = os.path.dirname(os.path.abspath(__file__))
     celestrak_response_file_path = os.path.join(
-        current_dir, "..", "offline_data", "celestrak_response_text.txt"
+        current_dir, "..", "offline_data", filename + "_response_text.txt"
     )
     return celestrak_response_file_path
 
@@ -90,7 +90,7 @@ def gnss_NORAD_ID_acquire(is_online: bool, is_save_response: bool = False) -> st
         ids (str): Comma-separated string with all operating GNSS satellittes NORAD catalog identification (NORAD_CAT_ID).
     """
     # path to the celestrak cached data .txt file
-    celestrak_response_file_path: str = _get_celestrak_response_file_path()
+    celestrak_response_file_path: str = _get_response_file_path("celestrak")
     # get a response from the online website `celestrak.org`
     if is_online:
         # request a tle list from celestrak website
