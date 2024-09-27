@@ -67,76 +67,61 @@ def _compute_end_date(start_date_str: str) -> str:
         raise e  # Re-raise the exception to break the code
 
 
-def gnss_NORAD_ID_acquire(online_flag: int, save_api_response: int) -> str:
+# ??? why this name? should `get_sat_ids()` be more suitable?
+def gnss_NORAD_ID_acquire(is_online: bool, is_save_response: bool) -> str:
     """Acquire the list of actual operating GNSS satellites from celestrak website.
 
     Args:
-        online_flag (int): Toggle offline celestrak.org response message for testing. 0 uses the offline message and 1 uses tries to get a response from the online website.
-        save_api_response (int): Toggle saving the API response. set it as 0 to don't save it and 1 if you do want to save it. the saved file will overwrite the previous gp.txt file.
+        is_online (bool): `True`: Try to get a response from the online website `celestrak.org`. `False`: use the offline message.
+        is_save_response (bool): `True`: Save it (it will overwrite the previous `gp.txt` file). `False`: Don't save it. # ??? `gp.txt`?
 
     Raises:
-        Exception: shows the website error code and its meaning if something wrong occurs.
+        FileNotFoundError: Show the website error code and its meaning if something wrong occurs.
 
     Returns:
-        id_str (str): string with all operating GNSS satellittes NORAD catalog identification (NORAD_CAT_ID) separated by commas
+        ids (str): Comma-separated string with all operating GNSS satellittes NORAD catalog identification (NORAD_CAT_ID).
     """
-    if online_flag == 1:
+    # find the current directory path
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    # searches the path to the celestrak offline data .txt file
+    celestrak_response_file_path = os.path.join(
+        current_dir, "..", "offline_data", "celestrak_response_text.txt"
+    )
+    # get a response from the online website `celestrak.org`
+    if is_online:
+        # request a tle list from celestrak website
         with requests.Session() as session:
-            url: str = (
-                "https://celestrak.org/NORAD/elements/gp.php?GROUP=gnss&FORMAT=3le"
-            )
-            celestrak_resp: Response = session.get(
-                url
-            )  # Requests a tle list from celestrak website
+            url = "https://celestrak.org/NORAD/elements/gp.php?GROUP=gnss&FORMAT=3le"
+            celestrak_resp: Response = session.get(url)
+        # analyze the request get code
         if celestrak_resp.status_code != 200:
-            errorMessage: str = _handle_error(celestrak_resp)
-            raise Exception(errorMessage)
-        matches: list = re.findall(
-            r"\n1 (\d+)", celestrak_resp.text.strip()
-        )  # Finds all NORAD Satellite Identifiers.
-
-        if save_api_response == 1:
-            # finds the current directory path
-            current_dir: str = os.path.dirname(os.path.abspath(__file__))
-            # searches the path to the celestrak offline data .txt file
-            celestrak_response_file_path: str = os.path.join(
-                current_dir, "..", "offlineData", "celestrak_response_text.txt"
-            )
+            error_message: str = _handle_error(celestrak_resp)
+            raise Exception(error_message)
+        celestrak_resp_text = celestrak_resp.text
+        if is_save_response:
             try:
                 with open(celestrak_response_file_path, "w") as file:
-                    cleaned_text: str = "\n".join(
-                        [
-                            line.strip()
-                            for line in celestrak_resp.text.splitlines()
-                            if line.strip()
-                        ]
-                    )  # Refactor the received text to write it into the .txt file correctly.
-                    file.write(cleaned_text + "\n")
-            except FileNotFoundError:
-                print(f"File {celestrak_response_file_path} not found.")
-        elif save_api_response != 0 or save_api_response != 1:
-            raise Exception("Invalid save_api_response value")
-    elif online_flag == 0:
-        current_dir = os.path.dirname(
-            os.path.abspath(__file__)
-        )  # finds the current directory path
-        celestrak_response_file_path = os.path.join(
-            current_dir, "..", "offlineData", "celestrak_response_text.txt"
-        )  # searches the path to the celestrak offline data .txt file
+                    cleaned_text = re.sub(r"\s*\r\n", r"\n", celestrak_resp_text)
+                    file.write(cleaned_text)
+            except FileNotFoundError as e:
+                raise FileNotFoundError(
+                    f"File not found: {celestrak_response_file_path}"
+                ) from e
+    # use the offline message
+    else:
+        # try read the offline available .txt file
         try:
             with open(celestrak_response_file_path) as file:
-                offline_celestrak_resp_text: str = (
-                    file.read()
-                )  # Reads the offline available .txt file.
-        except FileNotFoundError:
-            print(f"File {celestrak_response_file_path} not found.")
-        matches = re.findall(
-            r"\n1 (\d+)", offline_celestrak_resp_text
-        )  # Finds all NORAD Satellite Identifiers.
-    else:
-        raise Exception("Invalid online_flag value")
-    id_str = ",".join(matches)
-    return id_str
+                celestrak_resp_text = file.read()
+        except FileNotFoundError as e:
+            raise FileNotFoundError(
+                f"File not found: {celestrak_response_file_path}"
+            ) from e
+    # match all NORAD satellite identifiers.
+    matches: list = re.findall(r"\n1 (\d+)", celestrak_resp_text)
+    # comma-separated satellite IDs
+    ids = ",".join(matches)
+    return ids
 
 
 def tle_request(
@@ -181,13 +166,13 @@ def tle_request(
             resp = session.get(uriBase + requestTLE)
             # Return the raw TLE text
         if resp.status_code != 200:
-            errorMessage: str = _handle_error(resp)
-            raise Exception(errorMessage)
+            error_message: str = _handle_error(resp)
+            raise Exception(error_message)
         space_track_text = resp.text
         if save_api_response == 1:
             current_dir: str = os.path.dirname(os.path.abspath(__file__))
             celestrak_response_file_path: str = os.path.join(
-                current_dir, "..", "offlineData", "space_track_response_text.txt"
+                current_dir, "..", "offline_data", "space_track_response_text.txt"
             )
             try:
                 with open(celestrak_response_file_path, "w") as file:
@@ -206,7 +191,7 @@ def tle_request(
     elif online_flag == 0:
         current_dir = os.path.dirname(os.path.abspath(__file__))
         celestrak_response_file_path = os.path.join(
-            current_dir, "..", "offlineData", "space_track_response_text.txt"
+            current_dir, "..", "offline_data", "space_track_response_text.txt"
         )
         try:
             with open(celestrak_response_file_path) as file:
