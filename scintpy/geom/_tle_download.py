@@ -1,7 +1,6 @@
 """`tle_download module docstring."""
 
 import re
-from collections import defaultdict
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -79,7 +78,7 @@ def gnss_NORAD_ID_acquire(is_online: bool, is_cache_response: bool = False) -> s
 
     Args:
         is_online (bool): `True`: Try to get a response from the online website `celestrak.org`. `False`: use the cached message.
-        is_cache_response (bool): `True`: Save it (it will overwrite the previous `gp.txt` file). `False`: Don't save it. # ??? `gp.txt`?
+        is_cache_response (bool): `True`: Save it (it will overwrite the previous `celestrak_response_text.txt` file). `False`: Don't save it.
 
     Raises:
         FileNotFoundError: Show the website error code and its meaning if something wrong occurs.
@@ -133,7 +132,7 @@ def tle_request(
     """Obtain the raw TLE lines of all operating GNSS satellites from either the cached or online celestrak NORAD ID lists from the function gnss_NORAD_ID_acquire.
 
     Args:
-        sat_ids (str): Comma-separed string of NORAD catalog ID of the satellite.
+        sat_ids (str): Comma-separated string of NORAD catalog ID of the satellite.
         date_time (list[int]): Start date and timing in 'Year,Month,Day,Hours,Minutes,Seconds' format.
         username (str): Username for space-track.org.
         password (str): Password for space-track.org.
@@ -194,37 +193,84 @@ def tle_request(
     return raw_tle_lines
 
 
-def group_raw_tle_lines(text: list[str]) -> tuple[tuple[str, str, str], ...]:
-    """Creates a list with groups of three raw tle lines corresponding to each satellite ID requested to the API obtained from the function tle_request.
+def tle_epoch_to_datetime(tle_epoch: str) -> datetime:
+    """Convert a TLE epoch string (YYDDD.DDDDDD format) to a datetime object.
 
     Args:
-        text (list[str]): Input TLE data as a string.
+        tle_epoch (str): TLE epoch in YYDDD.DDDDDD format where:
+            - YY is the last two digits of the year.
+            - DDD is the day of the year.
+            - DDDDDD is the fractional part of the day.
 
     Returns:
-        tuple[list[str]]: A tuple of lists, each containing three lines of TLE data.
+        tle_datetime (datetime): A datetime object representing the TLE epoch.
+
     """
-    tle_list_size: int = len(text) // 3
-    tle_list_tuple: tuple[tuple[str, str, str], ...] = tuple(
-        (text[i * 3], text[i * 3 + 1], text[i * 3 + 2]) for i in range(tle_list_size)
+    year = int(tle_epoch[:2])  # First two digits are the year
+    day_of_year = float(
+        tle_epoch[2:]
+    )  # Remaining part is day of the year (including fractional part)
+    # Handle two-digit year (assumes 2000-2099; adjust if needed for different century)
+    if year < 57:  # Convention: years < 57 are assumed to be in the 2000s
+        year += 2000
+    else:
+        year += 1900
+    # Calculate the base date from the year
+    base_date = datetime(year, 1, 1)
+    # Add the day of the year (minus 1 because January 1st is the 1st day)
+    tle_datetime = base_date + timedelta(days=day_of_year - 1)
+    return tle_datetime
+
+
+def remove_duplicates(raw_tle_lines: list[str], date_time: list[int]) -> list[str]:
+    """This function receives the raw tle lines from tle_request function and removes its duplicated tles, keeping only the tles with the minor absolute difference between the user's input date and time and its epoch.
+
+    Args:
+        raw_tle_lines (list[str]): raw tle lines from tle_request function
+        date_time (list[int]): user's input date and time
+
+    Returns:
+        list[str]: compacted version of the tle lines without the duplicates.
+    """
+    user_date_input = datetime(
+        date_time[0],
+        date_time[1],
+        date_time[2],
+        date_time[3],
+        date_time[4],
+        date_time[5],
     )
-    return tle_list_tuple
-
-
-def find_duplicates(
-    tle_list_tuple: tuple[tuple[str, str, str], ...],
-) -> defaultdict[str, list[tuple[str, str, str]]]:
-    """_summary_.
-
-    Args:
-        tle_list_tuple (tuple[list[str], ...]): _description_.
-
-    Returns:
-        grouped_tle(defaultdict[list]): _description_.
-    """
-    grouped_tle: defaultdict[str, list[tuple[str, str, str]]] = defaultdict(list)
-
-    # Group the tuples by the first element
-    for tle in tle_list_tuple:
-        identifier: str = tle[0]  # First element is the identifier
-        grouped_tle[identifier].append(tle)
-    return grouped_tle
+    current_id = ""
+    current_epoch = ""
+    previous_id = ""
+    previous_epoch = ""
+    tle_discard_list = []
+    for i in range(len(raw_tle_lines) // 3):
+        if i == 0:
+            previous_id = raw_tle_lines[i * 3]
+            previous_epoch = raw_tle_lines[i * 3 + 1][18:32]
+            abs_previous_time_diff = abs(
+                user_date_input - tle_epoch_to_datetime(previous_epoch)
+            )
+        else:
+            current_id = raw_tle_lines[i * 3]
+            current_epoch = raw_tle_lines[i * 3 + 1][18:32]
+            abs_current_time_diff = abs(
+                user_date_input - tle_epoch_to_datetime(current_epoch)
+            )
+            if current_id == previous_id:
+                if abs_current_time_diff <= abs_previous_time_diff:
+                    tle_discard_list.append(
+                        [(i - 1) * 3, (i - 1) * 3 + 1, (i - 1) * 3 + 2]
+                    )
+                else:
+                    tle_discard_list.append([i * 3, i * 3 + 1, i * 3 + 2])
+            previous_id = current_id
+            abs_previous_time_diff = abs_current_time_diff
+    formatted_tle_discard_list = [
+        index for minor_list_number in tle_discard_list for index in minor_list_number
+    ]
+    for index in sorted(formatted_tle_discard_list, reverse=True):
+        del raw_tle_lines[index]
+    compact_tle_lines = raw_tle_lines
+    return compact_tle_lines
