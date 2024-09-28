@@ -14,7 +14,7 @@ def _handle_error(resp: Response) -> str:
     Parameters
     ----------
     resp : Response
-        response of the API.
+        Response of the API.
 
     Returns
     -------
@@ -81,13 +81,25 @@ def _get_end_date(start_date_str: str) -> str:
 
 
 def _get_cache_file_path(filename: str) -> str:
+    """Return relative file path to cached data.
+
+    Parameters
+    ----------
+    filename : str
+        Filename (with the extension) of the cached data.
+
+    Returns
+    -------
+    str
+        Relative file path.
+    """
     parent_dir = Path(__file__).resolve().parent.parent
     cached_file_path = parent_dir / "cached_data" / f"{filename}_response_text.txt"
     return str(cached_file_path)
 
 
 def get_gnss_norad_id(is_online: bool, is_cache_response: bool = False) -> str:
-    """Acquire the list of actual operating GNSS satellites from celestrak website.
+    """Return the list of actual operating GNSS satellites from celestrak website.
 
     Parameters
     ----------
@@ -287,14 +299,7 @@ def remove_duplicates(raw_tle_lines: list[str], date_time: list[int]) -> list[st
         New TLE lines with duplicates removed, keeping only the tles with the minor
         absolute difference between the user's input date and time and its epoch.
     """
-    user_date_input = datetime(
-        date_time[0],
-        date_time[1],
-        date_time[2],
-        date_time[3],
-        date_time[4],
-        date_time[5],
-    )
+    user_date_input = datetime(*date_time)  # type: ignore
     current_id = ""
     current_epoch = ""
     previous_id = ""
