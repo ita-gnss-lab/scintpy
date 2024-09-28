@@ -38,9 +38,9 @@ select = [
     "I", # isort (I) - Import-related checks (e.g., checking for order or unused imports)
     "Q", # `flake8-quotes` (Q) - Checks for quotes consistency (single vs. double quotes)
 ]
-ignore = [
-    "E501" # Line too long
-]
+# ignore = [
+#     "E501" # Line too long
+# ]
 
 # McCabe complexity checker configuration.
 [tool.ruff.lint.mccabe]
@@ -48,7 +48,7 @@ max-complexity = 10
 
 # Pydocstyle convention for docstrings.
 [tool.ruff.lint.pydocstyle]
-convention = "google"
+convention = "numpy"
 
 # Formatting settings.
 [tool.ruff.format]

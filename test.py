@@ -11,8 +11,8 @@ sample_time = 0.01
 username = "rdlfresearch@gmail.com"
 password = "dustrodrigo15304931"
 
-celestrak_ids = scintpy.geom.gnss_NORAD_ID_acquire(False, False)
-unprocessed_tle_list = scintpy.geom.tle_request(
+celestrak_ids = scintpy.geom.get_gnss_norad_id(False, False)
+unprocessed_tle_list = scintpy.geom.get_tle_request(
     celestrak_ids, date_time, username, password, False, False
 )
 
