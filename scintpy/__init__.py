@@ -1,4 +1,4 @@
-"""`scint` package docstring."""
+"""`scint` package docstring."""  # TODOC:
 
 from . import geom
 

@@ -1,4 +1,4 @@
-"""`geom` package docstring."""
+"""`geom` package docstring."""  # TODOC:
 
 from ._orbit_propagation import get_sat_over_horizon, get_skyfield_sats
 from ._tle_download import (

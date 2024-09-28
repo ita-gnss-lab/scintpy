@@ -1,4 +1,4 @@
-"""`tle_download module docstring."""
+"""`tle_download module docstring."""  # TODOC:
 
 import re
 from datetime import datetime, timedelta
@@ -138,10 +138,10 @@ def get_gnss_norad_id(is_online: bool, is_cache_response: bool = False) -> str:
             error_message: str = _handle_error(celestrak_resp)
             raise Exception(error_message)
         celestrak_resp_text = celestrak_resp.text
+        cleaned_text = re.sub(r"\s*\r\n", r"\n", celestrak_resp_text)
         if is_cache_response:
             try:
                 with open(celestrak_response_file_path, "w") as file:
-                    cleaned_text = re.sub(r"\s*\r\n", r"\n", celestrak_resp_text)
                     file.write(cleaned_text)
             except FileNotFoundError as e:
                 raise FileNotFoundError("Failed to save celestrak.org response.") from e
@@ -154,7 +154,7 @@ def get_gnss_norad_id(is_online: bool, is_cache_response: bool = False) -> str:
         except FileNotFoundError as e:
             raise FileNotFoundError("Failed to read the cached data file.") from e
     # match all NORAD satellite identifiers.
-    matches: list[str] = re.findall(r"\n1 (\d+)", celestrak_resp_text)
+    matches: list[str] = re.findall(r"\n1 (\d+)", cleaned_text)
     # comma-separated satellite IDs
     ids = ",".join(matches)
     return ids
@@ -299,7 +299,7 @@ def remove_duplicates(raw_tle_lines: list[str], date_time: list[int]) -> list[st
         New TLE lines with duplicates removed, keeping only the tles with the minor
         absolute difference between the user's input date and time and its epoch.
     """
-    user_date_input = datetime(*date_time)  # type: ignore
+    user_date_input = datetime(*date_time)  # type: ignore # NOTE: ignore unpacking `*` type error from `mypy`
     current_id = ""
     current_epoch = ""
     previous_id = ""

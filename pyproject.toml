@@ -21,7 +21,6 @@ mypy = "^1.11.2"
 pyupgrade = "^3.17.0"
 pre-commit = "^3.8.0"
 
-
 [tool.mypy]
 ignore_missing_imports = true
 disable_error_code = ["import-untyped"]
@@ -49,6 +48,9 @@ max-complexity = 10
 # Pydocstyle convention for docstrings.
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
+
+[tool.ruff.lint.pycodestyle]
+ignore-overlong-task-comments = true # ignore lengthy lines finished with codetags
 
 # Formatting settings.
 [tool.ruff.format]

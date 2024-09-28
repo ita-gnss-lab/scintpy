@@ -1,4 +1,4 @@
-"""`_orbit_propagation.py` module docstring."""
+"""`_orbit_propagation.py` module docstring."""  # TODOC:
 
 from datetime import datetime, timedelta
 
@@ -26,15 +26,25 @@ def get_sat_over_horizon(
     date_time: list[int],
     receiver_pos_input: list[float],
 ) -> list[bool]:
-    """Reduce the satellite_list to another one with only the available satellites at the line of sight.
+    """Return a list with only those with line of sight.
 
-    Args:
-        satellite_list (list[EarthSatellite]): Satellite list obtained from get_skyfield_sats function
-        sim_time (float): Desired amount of time
-        date_time (list[int]): [Year,Month,Day,Hours,Minutes,seconds] list
-        receiver_pos_input (list[float]): longitude [rad], latitude [rad] and height [m]
+    Parameters
+    ----------
+    satellite_list : list[EarthSatellite]
+        Satellite list obtained from get_skyfield_sats function.
+    sim_time : float
+        Desired amount of time. # ??? in seconds?
+    date_time : list[int]
+        [Year,Month,Day,Hours,Minutes,seconds] list.
+    receiver_pos_input : list[float]
+        longitude [rad], latitude [rad] and height [m]
+
+    Returns
+    -------
+    list[bool]
+        # TODOC:
     """
-    start_time_datetime = datetime(*date_time)  # type: ignore
+    start_time_datetime = datetime(*date_time)  # type: ignore # NOTE: ignore unpacking `*` type error from `mypy`
     end_time_datetime = start_time_datetime + timedelta(seconds=sim_time)
 
     ts = load.timescale()
