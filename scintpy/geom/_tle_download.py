@@ -150,7 +150,7 @@ def get_gnss_norad_id(is_online: bool, is_cache_response: bool = False) -> str:
         # try read the cached available .txt file
         try:
             with open(celestrak_response_file_path) as file:
-                celestrak_resp_text = file.read()
+                cleaned_text = file.read()
         except FileNotFoundError as e:
             raise FileNotFoundError("Failed to read the cached data file.") from e
     # match all NORAD satellite identifiers.
@@ -251,7 +251,7 @@ def get_tle_request(
     return raw_tle_lines
 
 
-def tle_epoch_to_datetime(tle_epoch: str) -> datetime:
+def _tle_epoch_to_datetime(tle_epoch: str) -> datetime:
     """Convert a TLE epoch string (YYDDD.DDDDDD format) to a datetime object.
 
     Parameters
@@ -284,7 +284,7 @@ def tle_epoch_to_datetime(tle_epoch: str) -> datetime:
 
 
 def remove_duplicates(raw_tle_lines: list[str], date_time: list[int]) -> list[str]:
-    """Get raw tle lines and returns new tle lines with duplicates removed.
+    """Get raw tle lines and return new tle lines with duplicates removed.
 
     Parameters
     ----------
@@ -300,37 +300,35 @@ def remove_duplicates(raw_tle_lines: list[str], date_time: list[int]) -> list[st
         absolute difference between the user's input date and time and its epoch.
     """
     user_date_input = datetime(*date_time)  # type: ignore # NOTE: ignore unpacking `*` type error from `mypy`
-    current_id = ""
-    current_epoch = ""
-    previous_id = ""
-    previous_epoch = ""
-    tle_discard_list = []
-    for i in range(len(raw_tle_lines) // 3):
-        if i == 0:
-            previous_id = raw_tle_lines[i * 3]
-            previous_epoch = raw_tle_lines[i * 3 + 1][18:32]
-            abs_previous_time_diff = abs(
-                user_date_input - tle_epoch_to_datetime(previous_epoch)
-            )
-        else:
-            current_id = raw_tle_lines[i * 3]
-            current_epoch = raw_tle_lines[i * 3 + 1][18:32]
+
+    i = 0
+    # as long as there is a next satellite to select
+    while 3 * (i + 1) < len(raw_tle_lines):
+        current_id = raw_tle_lines[3 * i]
+        next_id = raw_tle_lines[3 * (i + 1)]
+
+        # same satellite, compare epoch difference with respect to `date_time`
+        if current_id == next_id:
+            # time difference between the current satellite epoch and `date_time`
+            current_epoch = raw_tle_lines[3 * i + 1][18:32]
             abs_current_time_diff = abs(
-                user_date_input - tle_epoch_to_datetime(current_epoch)
+                user_date_input - _tle_epoch_to_datetime(current_epoch)
             )
-            if current_id == previous_id:
-                if abs_current_time_diff <= abs_previous_time_diff:
-                    tle_discard_list.append(
-                        [(i - 1) * 3, (i - 1) * 3 + 1, (i - 1) * 3 + 2]
-                    )
-                else:
-                    tle_discard_list.append([i * 3, i * 3 + 1, i * 3 + 2])
-            previous_id = current_id
-            abs_previous_time_diff = abs_current_time_diff
-    formatted_tle_discard_list = [
-        index for minor_list_number in tle_discard_list for index in minor_list_number
-    ]
-    for index in sorted(formatted_tle_discard_list, reverse=True):
-        del raw_tle_lines[index]
+            # time difference between the next satellite epoch and `date_time`
+            next_epoch = raw_tle_lines[3 * (i + 1) + 1][18:32]
+            abs_next_time_diff = abs(
+                user_date_input - _tle_epoch_to_datetime(next_epoch)
+            )
+
+            # current satellite epoch is closer to `date_time`: delete next satellite
+            if abs_current_time_diff < abs_next_time_diff:
+                del raw_tle_lines[3 * (i + 1) : 3 * (i + 1) + 3]
+            # next satellite epoch is closer to `date_time`: delete current satellite
+            else:
+                del raw_tle_lines[3 * i : 3 * i + 3]
+        # different satellites, go to next
+        else:
+            i += 1
+
     compact_tle_lines = raw_tle_lines
     return compact_tle_lines
