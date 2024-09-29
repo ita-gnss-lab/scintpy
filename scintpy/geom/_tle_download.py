@@ -8,6 +8,38 @@ import requests
 from requests.models import Response
 
 
+def _tle_epoch_to_datetime(tle_epoch: str) -> datetime:
+    """Convert a TLE epoch string (YYDDD.DDDDDD format) to a datetime object.
+
+    Parameters
+    ----------
+    tle_epoch : str
+        TLE epoch in YYDDD.DDDDDD format where:
+            - YY is the last two digits of the year.
+            - DDD is the day of the year.
+            - DDDDDD is the fractional part of the day.
+
+    Returns
+    -------
+    datetime
+        A datetime object representing the TLE epoch.
+    """
+    year = int(tle_epoch[:2])  # First two digits are the year
+    day_of_year = float(
+        tle_epoch[2:]
+    )  # Remaining part is day of the year (including fractional part)
+    # Handle two-digit year (assumes 2000-2099; adjust if needed for different century)
+    if year < 57:  # Convention: years < 57 are assumed to be in the 2000s
+        year += 2000
+    else:
+        year += 1900
+    # Calculate the base date from the year
+    base_date = datetime(year, 1, 1)
+    # Add the day of the year (minus 1 because January 1st is the 1st day)
+    tle_datetime = base_date + timedelta(days=day_of_year - 1)
+    return tle_datetime
+
+
 def _handle_error(resp: Response) -> str:
     """Show the correct error message related to the status of the api request.
 
@@ -249,38 +281,6 @@ def get_tle_request(
             raise FileNotFoundError("Failed to read the cached data file.") from e
     raw_tle_lines: list[str] = space_track_text.splitlines()
     return raw_tle_lines
-
-
-def _tle_epoch_to_datetime(tle_epoch: str) -> datetime:
-    """Convert a TLE epoch string (YYDDD.DDDDDD format) to a datetime object.
-
-    Parameters
-    ----------
-    tle_epoch : str
-        TLE epoch in YYDDD.DDDDDD format where:
-            - YY is the last two digits of the year.
-            - DDD is the day of the year.
-            - DDDDDD is the fractional part of the day.
-
-    Returns
-    -------
-    datetime
-        A datetime object representing the TLE epoch.
-    """
-    year = int(tle_epoch[:2])  # First two digits are the year
-    day_of_year = float(
-        tle_epoch[2:]
-    )  # Remaining part is day of the year (including fractional part)
-    # Handle two-digit year (assumes 2000-2099; adjust if needed for different century)
-    if year < 57:  # Convention: years < 57 are assumed to be in the 2000s
-        year += 2000
-    else:
-        year += 1900
-    # Calculate the base date from the year
-    base_date = datetime(year, 1, 1)
-    # Add the day of the year (minus 1 because January 1st is the 1st day)
-    tle_datetime = base_date + timedelta(days=day_of_year - 1)
-    return tle_datetime
 
 
 def remove_duplicates(raw_tle_lines: list[str], date_time: list[int]) -> list[str]:
