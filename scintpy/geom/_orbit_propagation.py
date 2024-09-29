@@ -33,7 +33,7 @@ def get_sat_over_horizon(
     satellite_list : list[EarthSatellite]
         Satellite list obtained from get_skyfield_sats function.
     sim_time : float
-        Desired amount of time. # ??? in seconds?
+        Desired amount of time in seconds.
     date_time : list[int]
         [Year,Month,Day,Hours,Minutes,seconds] list.
     receiver_pos_input : list[float]
