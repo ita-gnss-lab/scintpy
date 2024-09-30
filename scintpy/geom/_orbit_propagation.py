@@ -42,7 +42,6 @@ def get_sat_over_horizon(
     Returns
     -------
     list[bool]
-        # TODOC:
     """
     start_time_datetime = datetime(*date_time)  # type: ignore # NOTE: ignore unpacking `*` type error from `mypy`
     end_time_datetime = start_time_datetime + timedelta(seconds=sim_time)
@@ -58,13 +57,13 @@ def get_sat_over_horizon(
         end_time_datetime.second,
     )
     receiver_pos = wgs84.latlon(*receiver_pos_input)  # type: ignore
-    del_list = []
-    for sat in satellite_list:
-        init_relative_pos = (sat - receiver_pos).at(start_time_utc)
-        end_relative_pos = (sat - receiver_pos).at(end_time_utc)
+    i = 0
+    while i < len(satellite_list):
+        init_relative_pos = (satellite_list[i] - receiver_pos).at(start_time_utc)
+        end_relative_pos = (satellite_list[i] - receiver_pos).at(end_time_utc)
         print(init_relative_pos.position.km[2], end_relative_pos.position.km[2])
         if init_relative_pos.position.km[2] < 0 or end_relative_pos.position.km[2] < 0:
-            del_list.append(True)
+            del satellite_list[i]
         else:
-            del_list.append(False)  # TODO: Finish later this function
-    return del_list
+            i += 1
+    return satellite_list
