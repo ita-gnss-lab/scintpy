@@ -37,6 +37,17 @@ select = [
     "I", # isort (I) - Import-related checks (e.g., checking for order or unused imports)
     "Q", # `flake8-quotes` (Q) - Checks for quotes consistency (single vs. double quotes)
 ]
+task-tags = [
+    "BUG:",
+    "CAVEAT:",
+    "FIXME:",
+    "TODO:",
+    "TODOC:",
+    "HACK:",
+    "NOTE:",
+    "SEE:",
+    "???",
+]
 # ignore = [
 #     "E501" # Line too long
 # ]
