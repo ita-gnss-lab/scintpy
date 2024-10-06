@@ -5,15 +5,17 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry]
 name = "scintpy"
 version = "0.1.0"
-description = "A multimodel scintillation simulator."
+description = "A multimodel scintillation simulator."  
 authors = ["tapyu <rubem.engenharia@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.12"
 skyfield = ">=1.49"
 requests = "^2.32.3"
+numpy = "^2.1.2"
+matplotlib = "^3.9.2"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.6.7"

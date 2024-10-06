@@ -112,13 +112,16 @@ def _get_end_date(start_date_str: str) -> str:
         ) from e
 
 
-def _get_cache_file_path(filename: str) -> str:
+def _get_cache_file_path(filename: str, satellite_system: str) -> str:
     """Return relative file path to cached data.
 
     Parameters
     ----------
     filename : str
         Filename (with the extension) of the cached data.
+    satellite_system : str
+        `gnss`: Download GNSS satellites TLEs from Celestrak.
+        `cubesat`: Download Cubesats satellites TLEs from Celestrak.
 
     Returns
     -------
@@ -126,11 +129,15 @@ def _get_cache_file_path(filename: str) -> str:
         Relative file path.
     """
     parent_dir = Path(__file__).resolve().parent.parent
-    cached_file_path = parent_dir / "cached_data" / f"{filename}_response_text.txt"
+    cached_file_path = (
+        parent_dir / "cached_data" / f"{filename}_response_{satellite_system}_text.txt"
+    )
     return str(cached_file_path)
 
 
-def get_gnss_norad_id(is_online: bool, is_cache_response: bool = False) -> str:
+def get_gnss_norad_id(
+    is_online: bool, is_cache_response: bool = False, satellite_system: str = "gnss"
+) -> str:
     """Return the list of actual operating GNSS satellites from celestrak website.
 
     Parameters
@@ -141,6 +148,9 @@ def get_gnss_norad_id(is_online: bool, is_cache_response: bool = False) -> str:
     is_cache_response : bool, optional
         `True`: Save it (it will overwrite the previous `celestrak_response_text.txt`
         file). `False`: Don't save it. By default False.
+    satellite_system: str
+        `gnss`: Download GNSS satellites TLEs from Celestrak.
+        `cubesat`: Download Cubesats satellites TLEs from Celestrak.
 
     Returns
     -------
@@ -158,12 +168,21 @@ def get_gnss_norad_id(is_online: bool, is_cache_response: bool = False) -> str:
         Failed to read the cached data file.
     """
     # path to the celestrak cached data .txt file
-    celestrak_response_file_path: str = _get_cache_file_path("celestrak")
+    celestrak_response_file_path: str = _get_cache_file_path(
+        "celestrak", satellite_system
+    )
     # get a response from the online website `celestrak.org`
     if is_online:
         # request a tle list from celestrak website
         with requests.Session() as session:
-            url = "https://celestrak.org/NORAD/elements/gp.php?GROUP=gnss&FORMAT=3le"
+            if satellite_system == "gnss":
+                url = (
+                    "https://celestrak.org/NORAD/elements/gp.php?GROUP=gnss&FORMAT=3le"
+                )
+            elif satellite_system == "cubesat":
+                url = "https://celestrak.org/NORAD/elements/gp.php?GROUP=cubesat&FORMAT=3le"
+            else:
+                raise Exception("Invalid satellite system.")
             celestrak_resp: Response = session.get(url)
         # analyze the request get code
         if celestrak_resp.status_code != 200:
@@ -199,6 +218,7 @@ def get_tle_request(
     password: str,
     is_online: bool,
     is_cache_response: bool = False,
+    satellite_system: str = "gnss",
 ) -> list[str]:
     """Get raw TLE lines of all operating GNSS satellites from celestrak NORAD IDs.
 
@@ -235,7 +255,9 @@ def get_tle_request(
         Failed to read the cached data file.
     """
     # cached file path
-    space_track_response_file_path: str = _get_cache_file_path("space_track")
+    space_track_response_file_path: str = _get_cache_file_path(
+        "space_track", satellite_system
+    )
     # get a response from the online website `space-track.org`
     if is_online:
         general_date: datetime = datetime(date_time[0], date_time[1], date_time[2])

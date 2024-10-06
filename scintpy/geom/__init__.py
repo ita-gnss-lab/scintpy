@@ -1,5 +1,6 @@
 """`geom` package docstring."""  # TODOC:
 
+from ._geom_plots import skyplot_sat_orbit_timeseries
 from ._orbit_propagation import (
     get_sat_orbit_timeseries,
     get_sat_over_horizon,
@@ -18,4 +19,5 @@ __all__ = [
     "get_skyfield_sats",
     "get_sat_orbit_timeseries",
     "get_sat_over_horizon",
+    "skyplot_sat_orbit_timeseries",
 ]

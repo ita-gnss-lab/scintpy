@@ -26,6 +26,7 @@ def get_sat_over_horizon(
     sim_time: float,
     date_time: list[int],
     receiver_pos_input: list[float],
+    minimum_elevation_angle: float,
 ) -> list[bool]:
     """Return a list with only those with line of sight.
 
@@ -39,6 +40,8 @@ def get_sat_over_horizon(
         [Year,Month,Day,Hours,Minutes,seconds] list.
     receiver_pos_input : list[float]
         longitude [rad], latitude [rad] and height [m]
+    minimun_elevation_angle : float
+        Minimum elevation angle acceptable.
 
     Returns
     -------
@@ -58,16 +61,21 @@ def get_sat_over_horizon(
         alt_init, _, _ = init_relative_pos.altaz()
         alt_end, _, _ = end_relative_pos.altaz()
         # print(init_relative_pos.position.km[2],end_relative_pos.position.km[2])
-        if alt_init.degrees < 15 or alt_end.degrees < 15:
+        if (
+            alt_init.degrees < minimum_elevation_angle
+            or alt_end.degrees < minimum_elevation_angle
+        ):
             del satellite_list[i]
         else:
             i += 1
+    print(i)
     return satellite_list
 
 
 def get_sat_orbit_timeseries(
     reduced_sat_list: list[EarthSatellite],
     sim_time: float,
+    sample_time: float,
     date_time: list[int],
     receiver_pos_input: list[float],
 ) -> np.ndarray:
@@ -75,8 +83,10 @@ def get_sat_orbit_timeseries(
     start_time_datetime = datetime(*date_time, tzinfo=utc)  # type: ignore # NOTE: ignore unpacking `*` type error from `mypy`
     # Computation of the time series of datetime_objects with steps of 1 seconds with
     # the size of the user's input simulation time (sim_time)
+    Samples_amount = int(sim_time / sample_time)
     timeseries_datetime = [
-        start_time_datetime + timedelta(seconds=k) for k in range(int(sim_time))
+        start_time_datetime + timedelta(seconds=k * sample_time)
+        for k in range(Samples_amount)
     ]
     # Initialization of the timescale
     ts = load.timescale()
@@ -97,10 +107,10 @@ def get_sat_orbit_timeseries(
     # distance objects for each satellites. Their elements permit to change unities
     # calling for specific methods.
     sat_pos_timeseries = np.zeros(
-        (4, len(reduced_sat_list), int(sim_time)), dtype=np.float64
+        (4, len(reduced_sat_list), Samples_amount), dtype=np.float64
     )
     for sat in range(len(relative_sat_receiver_pos)):
-        for timestep in range(int(sim_time)):
+        for timestep in range(Samples_amount):
             alt, az, dist = relative_sat_receiver_pos[sat][timestep].altaz()
             dist_rate = (
                 relative_sat_receiver_pos[sat][timestep]
@@ -108,6 +118,6 @@ def get_sat_orbit_timeseries(
                 .m_per_s
             )
             sat_pos_timeseries[:, sat, timestep] = np.array(
-                [alt.radians, az.radians, dist.km, dist_rate]
+                [alt.degrees, az.degrees, dist.km, dist_rate]
             )
     return sat_pos_timeseries
