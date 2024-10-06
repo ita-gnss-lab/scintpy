@@ -108,6 +108,6 @@ def get_sat_orbit_timeseries(
                 .m_per_s
             )
             sat_pos_timeseries[:, sat, timestep] = np.array(
-                [alt.degrees, az.degrees, dist.km, dist_rate]
+                [alt.radians, az.radians, dist.km, dist_rate]
             )
     return sat_pos_timeseries
