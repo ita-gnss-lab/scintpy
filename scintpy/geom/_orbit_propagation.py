@@ -1,9 +1,31 @@
 """`_orbit_propagation.py` module docstring."""  # TODOC:
 
 from datetime import datetime, timedelta
+from pathlib import Path
+from typing import Tuple
 
 import numpy as np
+import scipy.io
 from skyfield.api import EarthSatellite, load, utc, wgs84
+
+
+def _get_cache_file_path(satellite_system: str) -> str:
+    """Return relative file path to cached data.
+
+    Parameters
+    ----------
+    satellite_system : str
+        `gnss`: Download GNSS satellites TLEs from Celestrak.
+        `cubesat`: Download Cubesats satellites TLEs from Celestrak.
+
+    Returns
+    -------
+    str
+        Relative file path.
+    """
+    parent_dir = Path(__file__).resolve().parent
+    cached_file_path = parent_dir / "sat_pos_data" / f"{satellite_system}"
+    return str(cached_file_path)
 
 
 def get_skyfield_sats(compact_tle_lines: list[str]) -> list[EarthSatellite]:
@@ -78,7 +100,7 @@ def get_sat_orbits(
     sample_time: float,
     date_time: list[int],
     receiver_pos_input: list[float],
-) -> np.ndarray:
+) -> Tuple[np.ndarray, list[str], list[datetime]]:
     # Initialization of start_time_datetime object using utc time zone
     start_time_datetime = datetime(*date_time, tzinfo=utc)  # type: ignore # NOTE: ignore unpacking `*` type error from `mypy`
     # Computation of the time series of datetime_objects with steps of 1 seconds with
@@ -121,5 +143,23 @@ def get_sat_orbits(
             sat_pos_timeseries[:, sat, timestep] = np.array(
                 [alt.degrees, az.radians, dist.km, dist_rate]
             )
-        sat_ids.append(reduced_sat_list[sat].name)
-    return sat_pos_timeseries, sat_ids
+        sat_ids.append(reduced_sat_list[sat].name[2:])
+    return sat_pos_timeseries, sat_ids, timeseries_datetime
+
+
+def save_sat_pos(
+    sat_pos_timeseries: np.ndarray, sat_ids: list[str], satellite_system: str
+) -> None:
+    """_summary_.
+
+    Parameters
+    ----------
+    sat_pos_timeseries : np.array
+        _description_.
+    sat_ids : list[str]
+        _description_.
+    satellite_system : str
+        _description_.
+    """
+    file_path = _get_cache_file_path(satellite_system)
+    scipy.io.savemat(file_path, {"sat_pos": sat_pos_timeseries, "sat_ids": sat_ids})

@@ -128,7 +128,7 @@ def _get_cache_file_path(filename: str, satellite_system: str) -> str:
     str
         Relative file path.
     """
-    parent_dir = Path(__file__).resolve().parent.parent
+    parent_dir = Path(__file__).resolve().parent
     cached_file_path = (
         parent_dir / "cached_data" / f"{filename}_response_{satellite_system}_text.txt"
     )
