@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def skyplot_sat_orbit_timeseries(sat_pos_timeseries: np.array) -> None:
+def plot_sat_orbits(sat_pos_timeseries: np.array, sat_ids: list[str]) -> None:
     """_summary_.
 
     Parameters
@@ -12,9 +12,19 @@ def skyplot_sat_orbit_timeseries(sat_pos_timeseries: np.array) -> None:
     sat_pos_timeseries : np.array
     _description_
     """
-    _, ax = plt.subplots()
     dimensions = sat_pos_timeseries.shape
+    ax1 = plt.subplot(1, 2, 1)
     for sat in range(dimensions[1]):
-        ax.plot(sat_pos_timeseries[3, sat, :])
-    ax.grid(True)
+        ax1.plot(sat_pos_timeseries[3, sat, :])
+
+    ax2 = plt.subplot(1, 2, 2, projection="polar")
+    # Azimuth needs to be in radians for the polar plot
+    # The polar plot assumes that the radius (elevation angle in this case)
+    # always increase with respect to how far it is to the center.
+    # Then, we need to plot the zenith angle instead of the elevation one.
+    for sat in range(dimensions[1]):
+        ax2.plot(sat_pos_timeseries[1, sat, :], 90 - sat_pos_timeseries[0, sat, :])
+
+    ax2.set_rticks([15, 30, 45, 60, 75, 90])
+    ax2.grid(True)
     plt.show()

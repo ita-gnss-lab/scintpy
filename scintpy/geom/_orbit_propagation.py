@@ -72,7 +72,7 @@ def get_sat_over_horizon(
     return satellite_list
 
 
-def get_sat_orbit_timeseries(
+def get_sat_orbits(
     reduced_sat_list: list[EarthSatellite],
     sim_time: float,
     sample_time: float,
@@ -109,6 +109,7 @@ def get_sat_orbit_timeseries(
     sat_pos_timeseries = np.zeros(
         (4, len(reduced_sat_list), Samples_amount), dtype=np.float64
     )
+    sat_ids = []
     for sat in range(len(relative_sat_receiver_pos)):
         for timestep in range(Samples_amount):
             alt, az, dist = relative_sat_receiver_pos[sat][timestep].altaz()
@@ -118,6 +119,7 @@ def get_sat_orbit_timeseries(
                 .m_per_s
             )
             sat_pos_timeseries[:, sat, timestep] = np.array(
-                [alt.degrees, az.degrees, dist.km, dist_rate]
+                [alt.degrees, az.radians, dist.km, dist_rate]
             )
-    return sat_pos_timeseries
+        sat_ids.append(reduced_sat_list[sat].name)
+    return sat_pos_timeseries, sat_ids
