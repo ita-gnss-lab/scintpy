@@ -26,7 +26,7 @@ def plot_sat_orbits(
             linewidth=2,
             color=color_values[sat],
         )
-        ax1.legend({f"{sat_ids[sat]}"})
+    ax1.legend(sat_ids)
     ax1.grid(True)
     ax1.set_xlabel("Time (UTC) [sec]")
     ax1.set_ylabel("Range Rate [m/s]")
@@ -36,6 +36,8 @@ def plot_sat_orbits(
     # always increase with respect to how far it is to the center.
     # Then, we need to plot the zenith angle instead of the elevation one.
     ax2 = plt.subplot(1, 2, 2, projection="polar")
+    ax2.set_theta_offset(np.pi / 2)  # Offset by 90 degrees (pi/2 radians)
+    ax2.set_theta_direction(-1)
     for sat in range(dimensions[1]):
         ax2.scatter(
             sat_pos_timeseries[1, sat, 0],

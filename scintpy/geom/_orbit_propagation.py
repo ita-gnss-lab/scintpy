@@ -24,7 +24,7 @@ def _get_cache_file_path(satellite_system: str) -> str:
         Relative file path.
     """
     parent_dir = Path(__file__).resolve().parent
-    cached_file_path = parent_dir / "sat_pos_data" / f"{satellite_system}"
+    cached_file_path = parent_dir / "sat_pos_data" / f"{satellite_system}.mat"
     return str(cached_file_path)
 
 
@@ -90,7 +90,9 @@ def get_sat_over_horizon(
             del satellite_list[i]
         else:
             i += 1
-    print(i)
+    print("Number of Satellites above the Horizon: ", i)
+    if i == 0:
+        raise Exception("No satellites above the horizon.")
     return satellite_list
 
 

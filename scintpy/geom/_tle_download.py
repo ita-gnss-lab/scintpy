@@ -181,6 +181,8 @@ def get_gnss_norad_id(
                 )
             elif satellite_system == "cubesat":
                 url = "https://celestrak.org/NORAD/elements/gp.php?GROUP=cubesat&FORMAT=3le"
+            elif satellite_system == "gps":
+                url = "https://celestrak.org/NORAD/elements/gp.php?GROUP=gps-ops&FORMAT=3le"
             else:
                 raise Exception("Invalid satellite system.")
             celestrak_resp: Response = session.get(url)

@@ -1,0 +1,21 @@
+MAIN PARAMETERS -----------------------------------------------
+receiver_pos_input = [-23.20713241666, -45.861737777, 605.088]
+sim_time = 600
+sample_time = 1
+minimum_elev_angle = 0
+
+SPECIFIC PARAMETERS -------------------------------------------
+SEEDS
+date_time = [2024, 10, 28, 6, 3, 0]
+TRIGISAT
+date_time = [2024, 10, 28, 6, 54, 30]
+AEROCUBE-6B
+date_time = [2024, 10, 28, 7, 7, 10]
+DUCHIFAT-1
+date_time = [2024, 10, 28, 7, 31, 0]
+CUTE-1
+date_time = [2024, 10, 28, 8, 0, 0] 
+PROPCUBE-3
+date_time = [2024, 10, 28, 8, 48, 0]
+WNISAT-1 + SONATE
+date_time = [2024, 10, 28, 8, 54, 0]
