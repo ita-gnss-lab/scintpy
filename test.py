@@ -20,7 +20,7 @@ satellite_system = "cubesat"
 minimum_elev_angle = 0
 # TODO: When i was comparing this code with the results that Daniele was getting in MATLAB, i noticed that this methodology of picking up the ids on celestrak website and going to space-track.org to download the TLE is working pretty well for any date with the exception to the current one. We need to correct that later.
 # False, True
-celestrak_ids = scintpy.geom.get_gnss_norad_id(True, True, satellite_system)
+celestrak_ids = scintpy.geom.get_norad_ids(True, True, "cubesat")
 unprocessed_tle_list = scintpy.geom.get_tle_request(
     celestrak_ids, date_time, username, password, True, True, satellite_system
 )

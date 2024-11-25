@@ -8,13 +8,13 @@ from ._orbit_propagation import (
     save_sat_pos,
 )
 from ._tle_download import (
-    get_gnss_norad_id,
+    get_norad_ids,
     get_tle_request,
     remove_duplicates,
 )
 
 __all__ = [
-    "get_gnss_norad_id",
+    "get_norad_ids",
     "get_tle_request",
     "remove_duplicates",
     "get_skyfield_sats",

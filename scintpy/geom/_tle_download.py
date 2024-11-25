@@ -3,6 +3,7 @@
 import re
 from datetime import datetime, timedelta
 from pathlib import Path
+from typing import Literal
 
 import requests
 from requests.models import Response
@@ -135,22 +136,26 @@ def _get_cache_file_path(filename: str, satellite_system: str) -> str:
     return str(cached_file_path)
 
 
-def get_gnss_norad_id(
-    is_online: bool, is_cache_response: bool = False, satellite_system: str = "gnss"
+def get_norad_ids(
+    is_online: bool,
+    is_cache_response: bool = False,
+    satellite_system: Literal["gnss", "cubesat", "gps"] = "gnss",
 ) -> str:
-    """Return the list of actual operating GNSS satellites from celestrak website.
+    """Return the list of all actual operating satellites from `celestrak.org`.
 
     Parameters
     ----------
     is_online : bool
         `True`: Try to get a response from the online website `celestrak.org`.
-        `False`: use the cached message.
+        `False`: Use the cached message.
     is_cache_response : bool, optional
-        `True`: Save it (it will overwrite the previous `celestrak_response_text.txt`
-        file). `False`: Don't save it. By default False.
+        `True`: Save overwriting previous cached data. It implies that `is_online` is
+                `True`.
+        `False`: Don't cached it. The default is `False`.
     satellite_system: str
         `gnss`: Download GNSS satellites TLEs from Celestrak.
         `cubesat`: Download Cubesats satellites TLEs from Celestrak.
+        `gps`: Download GPS satellites TLEs from Celestrak.
 
     Returns
     -------
@@ -173,18 +178,21 @@ def get_gnss_norad_id(
     )
     # get a response from the online website `celestrak.org`
     if is_online:
-        # request a tle list from celestrak website
-        with requests.Session() as session:
-            if satellite_system == "gnss":
+        # get URL
+        match satellite_system:
+            case "gnss":
                 url = (
                     "https://celestrak.org/NORAD/elements/gp.php?GROUP=gnss&FORMAT=3le"
                 )
-            elif satellite_system == "cubesat":
+            case "cubesat":
                 url = "https://celestrak.org/NORAD/elements/gp.php?GROUP=cubesat&FORMAT=3le"
-            elif satellite_system == "gps":
+            case "gps":
                 url = "https://celestrak.org/NORAD/elements/gp.php?GROUP=gps-ops&FORMAT=3le"
-            else:
+            case _:
                 raise Exception("Invalid satellite system.")
+
+        # request a tle list from `celestrak.org`
+        with requests.Session() as session:
             celestrak_resp: Response = session.get(url)
         # analyze the request get code
         if celestrak_resp.status_code != 200:
@@ -222,7 +230,7 @@ def get_tle_request(
     is_cache_response: bool = False,
     satellite_system: str = "gnss",
 ) -> list[str]:
-    """Get raw TLE lines of all operating GNSS satellites from celestrak NORAD IDs.
+    """Get raw TLE lines for a given satellite system from satellites from NORAD IDs.
 
     Parameters
     ----------
