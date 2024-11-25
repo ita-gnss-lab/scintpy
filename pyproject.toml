@@ -11,7 +11,7 @@ license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.10"
 skyfield = ">=1.49"
 requests = "^2.32.3"
 numpy = "^2.1.2"
