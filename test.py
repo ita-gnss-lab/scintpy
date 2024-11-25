@@ -6,7 +6,9 @@
 
 import scintpy
 
+#            year  mon day hr min sec
 date_time = [2024, 10, 28, 8, 54, 0]  # [2024, 10, 5, 9, 10, 20]
+# São José dos Campos
 receiver_pos_input = [-23.20713241666, -45.861737777, 605.088]
 
 sim_time = 600
@@ -18,9 +20,9 @@ satellite_system = "cubesat"
 minimum_elev_angle = 0
 # TODO: When i was comparing this code with the results that Daniele was getting in MATLAB, i noticed that this methodology of picking up the ids on celestrak website and going to space-track.org to download the TLE is working pretty well for any date with the exception to the current one. We need to correct that later.
 # False, True
-celestrak_ids = scintpy.geom.get_gnss_norad_id(False, False, satellite_system)
+celestrak_ids = scintpy.geom.get_gnss_norad_id(True, True, satellite_system)
 unprocessed_tle_list = scintpy.geom.get_tle_request(
-    celestrak_ids, date_time, username, password, False, False, satellite_system
+    celestrak_ids, date_time, username, password, True, True, satellite_system
 )
 
 compact_tle_lines = scintpy.geom.remove_duplicates(unprocessed_tle_list, date_time)
