@@ -18,14 +18,20 @@ numpy = "^2.1.2"
 matplotlib = "^3.9.2"
 scipy = "^1.14.1"
 loguru = "^0.7.2"
-pytest = "^8.3.3"
-pytest-mock = "^3.14.0"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.6.7"
 mypy = "^1.11.2"
 pyupgrade = "^3.17.0"
 pre-commit = "^3.8.0"
+pytest = "^8.3.3"
+pytest-mock = "^3.14.0"
+
+[tool.pytest.ini_options]
+markers = [
+    "unit: Mark a test as a unit test",
+    "integration: Mark a test as an integration test",
+]
 
 [tool.mypy]
 ignore_missing_imports = true
