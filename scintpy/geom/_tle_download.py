@@ -255,6 +255,11 @@ def get_norad_ids(
             raise HTTPError(error_message)
         celestrak_resp_text = celestrak_resp.text
         cleaned_text = re.sub(r"\s*\r\n", r"\n", celestrak_resp_text)
+
+        assert len(cleaned_text) <= len(
+            celestrak_resp_text
+        ), "Raw response from `celestrak.org` was not been cleaned correctly"
+
         if is_cache_response:
             try:
                 with open(celestrak_response_file_path, "w") as file:

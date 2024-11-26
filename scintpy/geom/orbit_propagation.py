@@ -154,7 +154,7 @@ def get_sats(
     date_time: list[int],
     receiver_pos: list[float],
     is_online: bool = True,
-    is_cache_response: bool = False,
+    is_cache_response: bool = True,
     satellite_system: Literal["gnss", "cubesat", "gps"] = "gnss",
     username: str = "rdlfresearch@gmail.com",
     password: str = "dustrodrigo15304931",
