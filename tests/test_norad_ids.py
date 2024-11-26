@@ -2,11 +2,12 @@
 
 from unittest.mock import Mock
 
+import pytest
 from pytest_mock import MockerFixture
 from requests import Response
 
 
-# @pytest.mark.unit
+@pytest.mark.unit
 def test_clean_raw_celestrak_response(mocker: MockerFixture) -> None:
     """Mock a `celestak.org` response and test whether its is correct."""
     # mock the response object
