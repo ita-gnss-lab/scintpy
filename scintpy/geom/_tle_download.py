@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Literal
 
 import requests
+from requests.exceptions import HTTPError
 from requests.models import Response
 
 
@@ -25,18 +26,18 @@ def _tle_epoch_to_datetime(tle_epoch: str) -> datetime:
     datetime
         A datetime object representing the TLE epoch.
     """
-    year = int(tle_epoch[:2])  # First two digits are the year
-    day_of_year = float(
-        tle_epoch[2:]
-    )  # Remaining part is day of the year (including fractional part)
-    # Handle two-digit year (assumes 2000-2099; adjust if needed for different century)
-    if year < 57:  # Convention: years < 57 are assumed to be in the 2000s
+    # first two digits are the year
+    year = int(tle_epoch[:2])
+    # remaining part is day of the year (including fractional part)
+    day_of_year = float(tle_epoch[2:])
+    # handle two-digit year (assumes 2000-2099; adjust if needed for different century)
+    if year < 57:  # NOTE: convention: years < 57 are assumed to be in the 2000s
         year += 2000
     else:
         year += 1900
-    # Calculate the base date from the year
+    # get the base date from the year
     base_date = datetime(year, 1, 1)
-    # Add the day of the year (minus 1 because January 1st is the 1st day)
+    # add the day of the year (minus 1 because January 1st is the 1st day)
     tle_datetime = base_date + timedelta(days=day_of_year - 1)
     return tle_datetime
 
@@ -91,7 +92,7 @@ def _get_end_date(start_date_str: str) -> str:
     Returns
     -------
     str
-        _description_
+        End date and time in the format YYYY-MM-DD.
 
     Raises
     ------
@@ -99,15 +100,15 @@ def _get_end_date(start_date_str: str) -> str:
         Invalid date format.
     """
     try:
-        # Parse the input date (assuming it's in 'YYYY-MM-DD' format)
+        # parse the input date (assuming it's in 'YYYY-MM-DD' format)
         start_date: datetime = datetime.strptime(start_date_str, "%Y-%m-%d")
-        # Add one day using timedelta
+        # add one day using timedelta
         end_date: datetime = start_date + timedelta(days=1)
-        # Format the result back to a string if needed
+        # format the result back to a string if needed
         end_date_str: str = end_date.strftime("%Y-%m-%d")
         return end_date_str
     except ValueError as e:
-        # Print the error message and raise the exception to stop execution
+        # print the error message and raise the exception to stop execution
         raise ValueError(
             "Error: Invalid date format. Please use the date formatting YYYY-MM-DD."
         ) from e
@@ -136,187 +137,12 @@ def _get_cache_file_path(filename: str, satellite_system: str) -> str:
     return str(cached_file_path)
 
 
-def get_norad_ids(
-    is_online: bool,
-    is_cache_response: bool = False,
-    satellite_system: Literal["gnss", "cubesat", "gps"] = "gnss",
-) -> str:
-    """Return the list of all actual operating satellites from `celestrak.org`.
-
-    Parameters
-    ----------
-    is_online : bool
-        `True`: Try to get a response from the online website `celestrak.org`.
-        `False`: Use the cached message.
-    is_cache_response : bool, optional
-        `True`: Save overwriting previous cached data. It implies that `is_online` is
-                `True`.
-        `False`: Don't cached it. The default is `False`.
-    satellite_system: str
-        `gnss`: Download GNSS satellites TLEs from Celestrak.
-        `cubesat`: Download Cubesats satellites TLEs from Celestrak.
-        `gps`: Download GPS satellites TLEs from Celestrak.
-
-    Returns
-    -------
-    str
-        Comma-separated string with all operating GNSS satellittes NORAD catalog
-        identification (NORAD_CAT_ID).
-
-    Raises
-    ------
-    Exception
-        GET resquest error.
-    FileNotFoundError
-        Failed to save celestrak.org response.
-    FileNotFoundError
-        Failed to read the cached data file.
-    """
-    # path to the celestrak cached data .txt file
-    celestrak_response_file_path: str = _get_cache_file_path(
-        "celestrak", satellite_system
-    )
-    # get a response from the online website `celestrak.org`
-    if is_online:
-        # get URL
-        match satellite_system:
-            case "gnss":
-                url = (
-                    "https://celestrak.org/NORAD/elements/gp.php?GROUP=gnss&FORMAT=3le"
-                )
-            case "cubesat":
-                url = "https://celestrak.org/NORAD/elements/gp.php?GROUP=cubesat&FORMAT=3le"
-            case "gps":
-                url = "https://celestrak.org/NORAD/elements/gp.php?GROUP=gps-ops&FORMAT=3le"
-            case _:
-                raise Exception("Invalid satellite system.")
-
-        # request a tle list from `celestrak.org`
-        with requests.Session() as session:
-            celestrak_resp: Response = session.get(url)
-        # analyze the request get code
-        if celestrak_resp.status_code != 200:
-            error_message: str = _handle_error(celestrak_resp)
-            raise Exception(error_message)
-        celestrak_resp_text = celestrak_resp.text
-        cleaned_text = re.sub(r"\s*\r\n", r"\n", celestrak_resp_text)
-        if is_cache_response:
-            try:
-                with open(celestrak_response_file_path, "w") as file:
-                    file.write(cleaned_text)
-            except FileNotFoundError as e:
-                raise FileNotFoundError("Failed to save celestrak.org response.") from e
-    # use the cached message
-    else:
-        # try read the cached available .txt file
-        try:
-            with open(celestrak_response_file_path) as file:
-                cleaned_text = file.read()
-        except FileNotFoundError as e:
-            raise FileNotFoundError("Failed to read the cached data file.") from e
-    # match all NORAD satellite identifiers.
-    matches: list[str] = re.findall(r"\n1 (\d+)", cleaned_text)
-    # comma-separated satellite IDs
-    ids = ",".join(matches)
-    return ids
-
-
-def get_tle_request(
-    sat_ids: str,
-    date_time: list[int],
-    username: str,
-    password: str,
-    is_online: bool,
-    is_cache_response: bool = False,
-    satellite_system: str = "gnss",
-) -> list[str]:
-    """Get raw TLE lines for a given satellite system from satellites from NORAD IDs.
-
-    Parameters
-    ----------
-    sat_ids : str
-        Comma-separated string of NORAD catalog ID of the satellite.
-    date_time : list[int]
-        Start date and timing in 'Year,Month,Day,Hours,Minutes,Seconds' format.
-    username : str
-        Username for space-track.org.
-    password : str
-        Password for space-track.org.
-    is_online : bool
-        `True`: Try to get a response from the `space-track.org`.
-        `False`: Use the cached message file.
-    is_cache_response : bool, optional
-        `True`: Chace the respose locally (it will overwrite
-        the previous `space_track_response_file`). `False`: Don't save it,
-        by default False
-
-    Returns
-    -------
-    list[str]
-        The TLE data in text format. Each element in the list is a line.
-
-    Raises
-    ------
-    Exception
-        GET or POST resquest error from space-track api data service.
-    FileNotFoundError
-        Not able to cache response from space-track.org.
-    FileNotFoundError
-        Failed to read the cached data file.
-    """
-    # cached file path
-    space_track_response_file_path: str = _get_cache_file_path(
-        "space_track", satellite_system
-    )
-    # get a response from the online website `space-track.org`
-    if is_online:
-        general_date: datetime = datetime(date_time[0], date_time[1], date_time[2])
-        start_date: str = general_date.strftime("%Y-%m-%d")
-        # API base and TLE query endpoint
-        uri_base = "https://www.space-track.org"
-        request_login = "/ajaxauth/login"
-        request_tle = (
-            f"/basicspacedata/query/class/gp_history/NORAD_CAT_ID/{sat_ids}"
-            f"/orderby/TLE_LINE1%20ASC//EPOCH/{start_date}--{_get_end_date(start_date)}"
-            "/format/3le/emptyresult/show"
-        )
-        # define login credentials directly
-        site_cred = {"identity": username, "password": password}
-
-        with requests.Session() as session:
-            # login to space-track.org
-            space_track_resp: Response = session.post(
-                uri_base + request_login, data=site_cred
-            )
-            # letch TLE data for the given satellite ID and date range
-            space_track_resp = session.get(uri_base + request_tle)
-            # return the raw TLE text
-        if space_track_resp.status_code != 200:
-            error_message: str = _handle_error(space_track_resp)
-            raise Exception(error_message)
-        space_track_text = space_track_resp.text
-        if is_cache_response:
-            try:
-                with open(space_track_response_file_path, "w") as file:
-                    cleaned_text = re.sub(r"\s*\r\n", r"\n", space_track_text)
-                    file.write(cleaned_text)
-            except FileNotFoundError as e:
-                raise FileNotFoundError(
-                    "Not able to cache response from space-track.org."
-                ) from e
-    # use cached message file
-    else:
-        try:
-            with open(space_track_response_file_path) as file:
-                space_track_text = file.read()
-        except FileNotFoundError as e:
-            raise FileNotFoundError("Failed to read the cached data file.") from e
-    raw_tle_lines: list[str] = space_track_text.splitlines()
-    return raw_tle_lines
-
-
-def remove_duplicates(raw_tle_lines: list[str], date_time: list[int]) -> list[str]:
+def _remove_duplicates(raw_tle_lines: list[str], date_time: list[int]) -> list[str]:
     """Get raw tle lines and return new tle lines with duplicates removed.
+
+    Some TLE requests may contain more than one timestamp for a same NORAD ID. This
+    function returns a list with the duplicates removed, leaving only the closest
+    timestamps with respect to `date_time`.
 
     Parameters
     ----------
@@ -364,3 +190,181 @@ def remove_duplicates(raw_tle_lines: list[str], date_time: list[int]) -> list[st
 
     compact_tle_lines = raw_tle_lines
     return compact_tle_lines
+
+
+def get_norad_ids(
+    is_online: bool,
+    is_cache_response: bool = False,
+    satellite_system: Literal["gnss", "cubesat", "gps"] = "gnss",
+) -> str:
+    """Return the list of all actual operating satellites from `celestrak.org`.
+
+    Parameters
+    ----------
+    is_online : bool
+        `True`: Try to get a response from the online website `celestrak.org`.
+        `False`: Use the cached message.
+    is_cache_response : bool, optional
+        `True`: Save overwriting previous cached data. It implies that `is_online` is
+                `True`.
+        `False`: Don't cached it. The default is `False`.
+    satellite_system: str
+        `gnss`: Download GNSS satellites TLEs from Celestrak.
+        `cubesat`: Download Cubesats satellites TLEs from Celestrak.
+        `gps`: Download GPS satellites TLEs from Celestrak.
+
+    Returns
+    -------
+    str
+        Comma-separated string with all operating GNSS satellittes NORAD catalog
+        identification (NORAD_CAT_ID).
+
+    Raises
+    ------
+    KeyError
+        Invalid satellite system.
+    HTTPError
+        GET resquest error.
+    FileNotFoundError
+        Failed to save celestrak.org response.
+    FileNotFoundError
+        Failed to read the cached data file.
+    """
+    # path to the celestrak cached data .txt file
+    celestrak_response_file_path: str = _get_cache_file_path(
+        "celestrak", satellite_system
+    )
+    # get a response from the online website `celestrak.org`
+    if is_online:
+        # get URL
+        satellite_systems = {
+            "gnss": "https://celestrak.org/NORAD/elements/gp.php?GROUP=gnss&FORMAT=3le",
+            "cubesat": "https://celestrak.org/NORAD/elements/gp.php?GROUP=cubesat&FORMAT=3le",
+            "gps": "https://celestrak.org/NORAD/elements/gp.php?GROUP=gps-ops&FORMAT=3le",
+        }
+        url = satellite_systems[satellite_system]
+        if not url:
+            raise KeyError("Invalid satellite system.")
+
+        # request a tle list from `celestrak.org`
+        with requests.Session() as session:
+            celestrak_resp: Response = session.get(url)
+        # analyze the request get code
+        if celestrak_resp.status_code != 200:
+            error_message: str = _handle_error(celestrak_resp)
+            raise HTTPError(error_message)
+        celestrak_resp_text = celestrak_resp.text
+        cleaned_text = re.sub(r"\s*\r\n", r"\n", celestrak_resp_text)
+        if is_cache_response:
+            try:
+                with open(celestrak_response_file_path, "w") as file:
+                    file.write(cleaned_text)
+            except FileNotFoundError as e:
+                raise FileNotFoundError("Failed to save celestrak.org response.") from e
+    # use the cached message
+    else:
+        # try read the cached available .txt file
+        try:
+            with open(celestrak_response_file_path) as file:
+                cleaned_text = file.read()
+        except FileNotFoundError as e:
+            raise FileNotFoundError("Failed to read the cached data file.") from e
+    # match all NORAD satellite identifiers.
+    matches: list[str] = re.findall(r"\n1 (\d+)", cleaned_text)
+    # comma-separated satellite IDs
+    ids = ",".join(matches)
+    return ids
+
+
+def get_tles(
+    norad_ids: str,
+    date_time: list[int],
+    username: str,
+    password: str,
+    is_online: bool,
+    is_cache_response: bool = False,
+    satellite_system: str = "gnss",
+) -> list[str]:
+    """Get TLE lines for a given satellite system from satellites from NORAD IDs.
+
+    Parameters
+    ----------
+    norad_ids : str
+        Comma-separated string of NORAD catalog ID of the satellite.
+    date_time : list[int]
+        Start date and timing in 'Year,Month,Day,Hours,Minutes,Seconds' format.
+    username : str
+        Username for space-track.org.
+    password : str
+        Password for space-track.org.
+    is_online : bool
+        `True`: Try to get a response from the `space-track.org`.
+        `False`: Use the cached message file.
+    is_cache_response : bool, optional
+        `True`: Chace the respose locally (it will overwrite
+        the previous `space_track_response_file`). `False`: Don't save it,
+        by default False
+
+    Returns
+    -------
+    list[str]
+        The TLE data in text format. Each element in the list is a line.
+
+    Raises
+    ------
+    HTTPError
+        GET or POST resquest error from space-track api data service.
+    FileNotFoundError
+        Not able to cache response from space-track.org.
+    FileNotFoundError
+        Failed to read the cached data file.
+    """
+    # cached file path
+    space_track_response_file_path: str = _get_cache_file_path(
+        "space_track", satellite_system
+    )
+    # get a response from the online website `space-track.org`
+    if is_online:
+        general_date: datetime = datetime(date_time[0], date_time[1], date_time[2])
+        start_date: str = general_date.strftime("%Y-%m-%d")
+        # API base and TLE query endpoint
+        uri_base = "https://www.space-track.org"
+        request_login = "/ajaxauth/login"
+        request_tle = (
+            f"/basicspacedata/query/class/gp_history/NORAD_CAT_ID/{norad_ids}"
+            f"/orderby/TLE_LINE1%20ASC//EPOCH/{start_date}--{_get_end_date(start_date)}"
+            "/format/3le/emptyresult/show"
+        )
+        # define login credentials directly
+        site_cred = {"identity": username, "password": password}
+
+        with requests.Session() as session:
+            # login to space-track.org
+            space_track_resp: Response = session.post(
+                uri_base + request_login, data=site_cred
+            )
+            # letch TLE data for the given satellite ID and date range
+            space_track_resp = session.get(uri_base + request_tle)
+            # return the raw TLE text
+        if space_track_resp.status_code != 200:
+            error_message: str = _handle_error(space_track_resp)
+            raise HTTPError(error_message)
+        space_track_text = space_track_resp.text
+        if is_cache_response:
+            try:
+                with open(space_track_response_file_path, "w") as file:
+                    cleaned_text = re.sub(r"\s*\r\n", r"\n", space_track_text)
+                    file.write(cleaned_text)
+            except FileNotFoundError as e:
+                raise FileNotFoundError(
+                    "Not able to cache response from space-track.org."
+                ) from e
+    # use cached message file
+    else:
+        try:
+            with open(space_track_response_file_path) as file:
+                space_track_text = file.read()
+        except FileNotFoundError as e:
+            raise FileNotFoundError("Failed to read the cached data file.") from e
+    raw_tle_lines: list[str] = space_track_text.splitlines()
+    return _remove_duplicates(raw_tle_lines, date_time)
