@@ -290,7 +290,7 @@ def get_tles(
     is_cache_response: bool = False,
     satellite_system: str = "gnss",
 ) -> list[str]:
-    """Get TLE lines for a given satellite system from satellites from NORAD IDs.
+    """Get TLE lines from `space-track.org` for a given set of NORAD IDs.
 
     Parameters
     ----------
@@ -359,10 +359,13 @@ def get_tles(
             try:
                 with open(space_track_response_file_path, "w") as file:
                     cleaned_text = re.sub(r"\s*\r\n", r"\n", space_track_text)
+                    assert len(cleaned_text) < len(
+                        space_track_text
+                    ), "`space-track.org` response is not being cleaned properly."
                     file.write(cleaned_text)
             except FileNotFoundError as e:
                 raise FileNotFoundError(
-                    "Not able to cache response from space-track.org."
+                    "Not able to cache response from `space-track.org`."
                 ) from e
     # use cached message file
     else:
