@@ -1,6 +1,6 @@
 """`geom` package docstring."""  # TODOC:
 
-from ._geom_plots import plot_sat_orbits
-from .orbit_propagation import get_sat_orbits, get_sats
+from .orbit_propagation import find_LOS_sats, get_sat_orbits
+from .plots import plot_sat_orbits
 
-__all__ = ["get_sat_orbits", "plot_sat_orbits", "get_sats"]
+__all__ = ["get_sat_orbits", "plot_sat_orbits", "find_LOS_sats"]

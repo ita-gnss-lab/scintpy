@@ -157,7 +157,7 @@ def _remove_duplicates(raw_tle_lines: list[str], date_time: list[int]) -> list[s
         New TLE lines with duplicates removed, keeping only the tles with the minor
         absolute difference between the user's input date and time and its epoch.
     """
-    user_date_input = datetime(*date_time)  # type: ignore # NOTE: ignore unpacking `*` type error from `mypy`
+    user_date_input = datetime(*date_time)  # type: ignore # HACK: ignore unpacking `*` type error from `mypy`
 
     i = 0
     # as long as there is a next satellite to select
@@ -194,8 +194,8 @@ def _remove_duplicates(raw_tle_lines: list[str], date_time: list[int]) -> list[s
 
 def get_norad_ids(
     is_online: bool,
-    is_cache_response: bool = False,
-    satellite_system: Literal["gnss", "cubesat", "gps"] = "gnss",
+    is_cache_response: bool,
+    satellite_system: Literal["gnss", "cubesat", "gps"],
 ) -> str:
     """Return the list of all actual operating satellites from `celestrak.org`.
 
@@ -287,8 +287,8 @@ def get_tles(
     username: str,
     password: str,
     is_online: bool,
-    is_cache_response: bool = False,
-    satellite_system: str = "gnss",
+    is_cache_response: bool,
+    satellite_system: str,
 ) -> list[str]:
     """Get TLE lines from `space-track.org` for a given set of NORAD IDs.
 
