@@ -23,7 +23,9 @@ def test_clean_raw_celestrak_response(mocker: MockerFixture) -> None:
     # NOTE: Import the function dynamically within the test so that the mock is in effect
     from scintpy.geom._tle_download import get_norad_ids
 
-    ids: str = get_norad_ids(is_online=True, is_cache_response=False)
+    ids: str = get_norad_ids(
+        is_online=True, is_cache_response=False, satellite_system="gnss"
+    )
 
     assert all(
         id.isdigit() for id in ids.split(",")

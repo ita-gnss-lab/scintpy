@@ -73,7 +73,15 @@ def test_tles_celestrak_response(mocker: MockerFixture) -> None:
     mock_date_time = [2024, 10, 28, 8, 54, 0]
 
     # NOTE: the input parameters are meaningless as no post() or get() are being performed
-    tles: list[str] = get_tles("", mock_date_time, "", "", True)
+    tles: list[str] = get_tles(
+        "",
+        mock_date_time,
+        "",
+        "",
+        is_online=True,
+        is_cache_response=False,
+        satellite_system="gnss",
+    )
 
     assert all(
         sat_sys in all_sat_sys for sat_sys in [tle.split()[1] for tle in tles[::3]]

@@ -1,7 +1,7 @@
 """`_orbit_propagation.py` module docstring."""  # TODOC:
 
 from datetime import datetime, timedelta
-from typing import Generator, Literal, Tuple
+from typing import Iterator, Literal, Tuple
 
 import numpy as np
 from loguru import logger
@@ -35,7 +35,7 @@ def _yield_LOS_sats(
     date_time: list[int],
     receiver_pos: GeographicPosition,
     min_elevation_angle: float,
-) -> Generator[Tuple[EarthSatellite, datetime, datetime]]:
+) -> Iterator[Tuple[EarthSatellite, datetime, datetime]]:
     """Return a list with only those with line of sight.
 
     Parameters
@@ -162,7 +162,7 @@ def find_LOS_sats(
     username: str = "rdlfresearch@gmail.com",
     password: str = "dustrodrigo15304931",
     min_elevation_angle: float = 5,
-) -> Generator[Tuple[EarthSatellite, datetime, datetime]]:
+) -> Iterator[Tuple[EarthSatellite, datetime, datetime]]:
     """Get satellite over horizon.
 
     Parameters
