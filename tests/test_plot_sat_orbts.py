@@ -1,7 +1,16 @@
 """Test the satellite orbit plots."""
 
-mock_tle_lines = [
-    [
+from datetime import datetime, timezone
+
+import pytest
+from pytest_mock import MockerFixture
+from skyfield.api import wgs84
+
+
+@pytest.mark.visual
+def test_plot_sat_orbts(mocker: MockerFixture) -> None:
+    """Test the satellite orbit plots."""
+    mock_tle_lines = [
         "0 NAVSTAR 43 (USA 132)",
         "1 24876U 97035A   24302.39915371  .00000082  00000-0  00000-0 0  9990",
         "2 24876  55.7149 121.9219 0085478  54.7594 306.0903  2.00561667199981",
@@ -297,4 +306,23 @@ mock_tle_lines = [
         "1 61182U 24167A   24302.16173113 -.00000034  00000-0  00000-0 0  9990",
         "2 61182  55.3975 237.6784 0016414 274.8348  84.9595  1.73176914   697",
     ]
-]
+    reference_time = datetime(2024, 10, 28, 8, 54, 0, tzinfo=timezone.utc)
+    # São José dos Campos
+    receiver_pos = wgs84.latlon(-23.20713241666, -45.861737777, 605.088)
+
+    from scintpy.geom import get_sat_orbits, plot_sat_orbits
+    from scintpy.geom.orbit_propagation import _get_sats, _yield_LOS_sats
+
+    print(f"Aquuui: {len(mock_tle_lines)}")
+    sats = _get_sats(mock_tle_lines)
+
+    print(sats)
+
+    scenarios = []
+    for sat, rise_time, set_time in _yield_LOS_sats(
+        sats, reference_time, receiver_pos, 5
+    ):
+        scenarios.append(get_sat_orbits(sat, receiver_pos, rise_time, set_time))
+
+    plot_sat_orbits(scenarios, reference_time)
+    # NOTE: that is a visual test.

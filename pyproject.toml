@@ -30,6 +30,7 @@ pytest-mock = "^3.14.0"
 markers = [
     "unit: Mark a test as a unit test",
     "integration: Mark a test as an integration test",
+    "visual: for visual tests"
 ]
 
 [tool.mypy]
