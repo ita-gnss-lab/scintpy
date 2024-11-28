@@ -1,11 +1,12 @@
 """`tle_download module docstring."""  # TODOC:
 
 import re
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Literal
 
 import requests
+from loguru import logger
 from requests.exceptions import HTTPError
 from requests.models import Response
 
@@ -36,7 +37,7 @@ def _tle_epoch_to_datetime(tle_epoch: str) -> datetime:
     else:
         year += 1900
     # get the base date from the year
-    base_date = datetime(year, 1, 1)
+    base_date = datetime(year, 1, 1, tzinfo=timezone.utc)
     # add the day of the year (minus 1 because January 1st is the 1st day)
     tle_datetime = base_date + timedelta(days=day_of_year - 1)
     return tle_datetime
@@ -122,8 +123,7 @@ def _get_cache_file_path(filename: str, satellite_system: str) -> str:
     filename : str
         Filename (with the extension) of the cached data.
     satellite_system : str
-        `gnss`: Download GNSS satellites TLEs from Celestrak.
-        `cubesat`: Download Cubesats satellites TLEs from Celestrak.
+        The satellite type that `scintpy` should search for.
 
     Returns
     -------
@@ -137,19 +137,20 @@ def _get_cache_file_path(filename: str, satellite_system: str) -> str:
     return str(cached_file_path)
 
 
-def _remove_duplicates(raw_tle_lines: list[str], date_time: list[int]) -> list[str]:
+def _remove_duplicates(raw_tle_lines: list[str], reference_time: datetime) -> list[str]:
     """Get raw tle lines and return new tle lines with duplicates removed.
 
     Some TLE requests may contain more than one timestamp for a same NORAD ID. This
     function returns a list with the duplicates removed, leaving only the closest
-    timestamps with respect to `date_time`.
+    epoch with respect to `reference_time`.
 
     Parameters
     ----------
     raw_tle_lines : list[str]
-        Raw tle lines from get_tle_request function.
-    date_time : list[int]
-        User's input date and time.
+        Raw TLE lines, possibly with duplicates.
+    reference_time : datetime
+        UTC reference time from where `scintpy` searches for satellites whose
+        observation window contains `reference_time`.
 
     Returns
     -------
@@ -157,8 +158,6 @@ def _remove_duplicates(raw_tle_lines: list[str], date_time: list[int]) -> list[s
         New TLE lines with duplicates removed, keeping only the tles with the minor
         absolute difference between the user's input date and time and its epoch.
     """
-    user_date_input = datetime(*date_time)  # type: ignore # HACK: ignore unpacking `*` type error from `mypy`
-
     i = 0
     # as long as there is a next satellite to select
     while 3 * (i + 1) < len(raw_tle_lines):
@@ -170,12 +169,12 @@ def _remove_duplicates(raw_tle_lines: list[str], date_time: list[int]) -> list[s
             # time difference between the current satellite epoch and `date_time`
             current_epoch = raw_tle_lines[3 * i + 1][18:32]
             abs_current_time_diff = abs(
-                user_date_input - _tle_epoch_to_datetime(current_epoch)
+                reference_time - _tle_epoch_to_datetime(current_epoch)
             )
             # time difference between the next satellite epoch and `date_time`
             next_epoch = raw_tle_lines[3 * (i + 1) + 1][18:32]
             abs_next_time_diff = abs(
-                user_date_input - _tle_epoch_to_datetime(next_epoch)
+                reference_time - _tle_epoch_to_datetime(next_epoch)
             )
 
             # current satellite epoch is closer to `date_time`: delete next satellite
@@ -197,26 +196,28 @@ def get_norad_ids(
     is_cache_response: bool,
     satellite_system: Literal["gnss", "cubesat", "gps"],
 ) -> str:
-    """Return the list of all actual operating satellites from `celestrak.org`.
+    """Return the list of the operating satellite NORAD IDs from `celestrak.org`.
+
+    `celestrak.org` returns the real-time TLEs of active satellites, being not possible
+     to request TLEs in the past. Therefore, only the NORAD IDs for a given satellite
+     system are returned. These IDs are used afterwards to request the TLEs at the
+     desired datetime on `space-track.org`.
 
     Parameters
     ----------
     is_online : bool
-        `True`: Try to get a response from the online website `celestrak.org`.
-        `False`: Use the cached message.
+        `True`: Try to get a response from the online website `celestrak.org`; `False`:
+        Use the cached message.
     is_cache_response : bool, optional
-        `True`: Save overwriting previous cached data. It implies that `is_online` is
-                `True`.
-        `False`: Don't cached it. The default is `False`.
+        `True`: Save overwriting previous cached data (it implies that `is_online` is
+        `True`); `False`: Don't cached it.
     satellite_system: str
-        `gnss`: Download GNSS satellites TLEs from Celestrak.
-        `cubesat`: Download Cubesats satellites TLEs from Celestrak.
-        `gps`: Download GPS satellites TLEs from Celestrak.
+        The satellite type that `scintpy` should search for. By default "gnss".
 
     Returns
     -------
     str
-        Comma-separated string with all operating GNSS satellittes NORAD catalog
+        Comma-separated string with all operating satellittes NORAD catalog
         identification (NORAD_CAT_ID).
 
     Raises
@@ -253,6 +254,7 @@ def get_norad_ids(
         if celestrak_resp.status_code != 200:
             error_message: str = _handle_error(celestrak_resp)
             raise HTTPError(error_message)
+        logger.debug("Successful NORAD IDs GET request from `celestrak.org`.")
         celestrak_resp_text = celestrak_resp.text
         cleaned_text = re.sub(r"\s*\r\n", r"\n", celestrak_resp_text)
 
@@ -264,6 +266,10 @@ def get_norad_ids(
             try:
                 with open(celestrak_response_file_path, "w") as file:
                     file.write(cleaned_text)
+                    logger.debug(
+                        "NORAD IDs have been successfully cached "
+                        f"in  {celestrak_response_file_path}."
+                    )
             except FileNotFoundError as e:
                 raise FileNotFoundError("Failed to save celestrak.org response.") from e
     # use the cached message
@@ -272,6 +278,10 @@ def get_norad_ids(
         try:
             with open(celestrak_response_file_path) as file:
                 cleaned_text = file.read()
+            logger.debug(
+                "NORAD IDs have been successfully read from the "
+                f"cached file in {celestrak_response_file_path}."
+            )
         except FileNotFoundError as e:
             raise FileNotFoundError("Failed to read the cached data file.") from e
     # match all NORAD satellite identifiers.
@@ -283,32 +293,37 @@ def get_norad_ids(
 
 def get_tles(
     norad_ids: str,
-    date_time: list[int],
+    reference_time: datetime,
     username: str,
     password: str,
     is_online: bool,
     is_cache_response: bool,
     satellite_system: str,
 ) -> list[str]:
-    """Get TLE lines from `space-track.org` for a given set of NORAD IDs.
+    """Get TLE lines from `space-track.org` for a given set of NORAD IDs at a datetime.
+
+    The NORAD IDs were either previously cached to requested from `celestrak.org` and
+    are tailored to a certain type of satellites.
 
     Parameters
     ----------
     norad_ids : str
         Comma-separated string of NORAD catalog ID of the satellite.
-    date_time : list[int]
-        Start date and timing in 'Year,Month,Day,Hours,Minutes,Seconds' format.
+    reference_time : datetime
+        UTC reference time from where `scintpy` searches for satellites whose
+        observation window contains `reference_time`.
     username : str
-        Username for space-track.org.
+        The username used to request data on `space-track.org`. It is used if and only
+        if `is_online` is `True`.
     password : str
-        Password for space-track.org.
+        The password used to request data on `space-track.org`. It is used if and only
+        if `is_online` is `True`
     is_online : bool
-        `True`: Try to get a response from the `space-track.org`.
-        `False`: Use the cached message file.
+        `True`: Try to get a response from the `space-track.org`; `False`: Use the
+        cached message file.
     is_cache_response : bool, optional
-        `True`: Chace the respose locally (it will overwrite
-        the previous `space_track_response_file`). `False`: Don't save it,
-        by default False
+        Save overwriting previous cached data (It implies that `is_online` is
+        `True`); `False`: Don't cached it.
 
     Returns
     -------
@@ -330,8 +345,7 @@ def get_tles(
     )
     # get a response from the online website `space-track.org`
     if is_online:
-        general_date: datetime = datetime(date_time[0], date_time[1], date_time[2])
-        start_date: str = general_date.strftime("%Y-%m-%d")
+        start_date: str = reference_time.strftime("%Y-%m-%d")
         # API base and TLE query endpoint
         uri_base = "https://www.space-track.org"
         request_login = "/ajaxauth/login"
@@ -354,6 +368,7 @@ def get_tles(
         if space_track_resp.status_code != 200:
             error_message: str = _handle_error(space_track_resp)
             raise HTTPError(error_message)
+        logger.debug("Successful TLEs GET request from `space-track.org`.")
         space_track_text = space_track_resp.text
         if is_cache_response:
             try:
@@ -367,12 +382,20 @@ def get_tles(
                 raise FileNotFoundError(
                     "Not able to cache response from `space-track.org`."
                 ) from e
+            logger.debug(
+                "NORAD IDs have been successfully cached "
+                f"in  {space_track_response_file_path}."
+            )
     # use cached message file
     else:
         try:
             with open(space_track_response_file_path) as file:
                 space_track_text = file.read()
+                logger.debug(
+                    "TLEs have been successfully read from the "
+                    f"cached file in {space_track_response_file_path}."
+                )
         except FileNotFoundError as e:
             raise FileNotFoundError("Failed to read the cached data file.") from e
     raw_tle_lines: list[str] = space_track_text.splitlines()
-    return _remove_duplicates(raw_tle_lines, date_time)
+    return _remove_duplicates(raw_tle_lines, reference_time)

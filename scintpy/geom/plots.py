@@ -5,27 +5,29 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.cm import get_cmap
-from skyfield.api import utc
 
 from .scenario import Scenario
 
 
 def plot_sat_orbits(
     scenarios: Scenario | list[Scenario],
-    date_time: list[int],
+    reference_time: datetime,
 ) -> None:
-    """_summary_.
+    """Plot the satellite orbits and their respective velocities.
 
     Parameters
     ----------
-    sat_pos_timeseries : np.array
-    _description_
+    scenarios : Scenario | list[Scenario]
+        An `Scenario` or a list of `Scenario` objects, where each element contains a
+        receiver-satellite trajectory.
+    reference_time: datetime
+        The reference time used to search for the LOS satellites.
     """
     # Use a continuous colormap
     cmap = get_cmap("hsv")
     _, axs = plt.subplots(1, 2)
     axs[0].grid(True)
-    axs[0].set_xlabel("Time (UTC) [sec]")
+    axs[0].set_xlabel("Time (UTC)")
     axs[0].set_ylabel("Range Rate [m/s]")
 
     # Azimuth needs to be in radians for the polar plot
@@ -59,7 +61,7 @@ def plot_sat_orbits(
         axs[1].scatter(
             scenario.az_rad[0],
             90 - scenario.alt_deg[0],
-            marker="<",
+            marker="o",
             color=color,
         )
         # # final position
@@ -89,7 +91,7 @@ def plot_sat_orbits(
 
     # reference time
     axs[0].axvline(
-        datetime(*date_time, tzinfo=utc),  # type: ignore # HACK: ignore unpacking `*` and multiple values for keyword error from `mypy`
+        reference_time,
         color="red",
         linestyle="--",
         linewidth=2,

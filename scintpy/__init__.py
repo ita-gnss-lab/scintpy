@@ -1,6 +1,7 @@
 """`scint` package docstring."""  # TODOC:
 
 import sys
+from typing import Literal
 
 from loguru import logger
 
@@ -9,7 +10,17 @@ from . import geom
 __all__ = ["geom"]
 
 
-def _setup_logging() -> None:
+def setup_log(level: Literal["TRACE", "DEBUG", "INFO", "CLI"] = "INFO") -> None:
+    """Set up the STDOUT log configuration.
+
+    By default, `scintpy` sets up the STDOUT log level for INFO or above. This default
+    setting can be overwritten by the enduser.
+
+    Parameters
+    ----------
+    level : Literal["TRACE", "DEBUG", "INFO", "CLI"], optional
+        The STDOUT log level, by default "INFO".
+    """
     # remove default logger config
     logger.remove()
     # set up file logging
@@ -40,8 +51,8 @@ def _setup_logging() -> None:
     # set up CLI logging
     logger.add(
         sys.stdout,
-        level="DEBUG",  # NOTE: choose between "TRACE" "DEBUG" "INFO" "CLI"
+        level=level,
     )
 
 
-_setup_logging()
+setup_log()

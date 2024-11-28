@@ -1,5 +1,6 @@
 """Test the if the raw TLE response from `space-track.org` is handled correctly."""
 
+from datetime import datetime, timezone
 from unittest.mock import MagicMock
 
 import pytest
@@ -70,7 +71,7 @@ def test_tles_celestrak_response(mocker: MockerFixture) -> None:
     }
 
     # patch the requests.get method to return the mock response
-    mock_date_time = [2024, 10, 28, 8, 54, 0]
+    mock_date_time = datetime(2024, 10, 28, 8, 54, 0, tzinfo=timezone.utc)
 
     # NOTE: the input parameters are meaningless as no post() or get() are being performed
     tles: list[str] = get_tles(
