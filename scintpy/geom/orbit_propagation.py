@@ -81,7 +81,8 @@ def _yield_LOS_sats(
             # prevent out-of-bound errors
             if i + 2 >= len(event_codes):
                 logger.trace(
-                    f"The desired UTC time {reference_time} is out of the the "
+                    "The desired UTC time "
+                    f"{reference_time.strftime('%Y %b %d %H:%M:%S')} is out of the "
                     f"observation window where the satellite {sat.name} is in "
                     "line-of-sight with the receiver."
                 )
@@ -100,12 +101,13 @@ def _yield_LOS_sats(
 
                     logger.trace(
                         f"The satellite {sat.name} is in line-of-sight with the "
-                        f"receiver for the UTC time {reference_time}"
+                        "receiver for the UTC time "
+                        f"{reference_time.strftime('%Y %b %d %H:%M:%S')}"
                     )
                     for j in range(3):
                         logger.trace(
-                            f'{times[i+j].utc_strftime("%Y %b %d %H:%M:%S")}: '
-                            f'{events[event_codes[i+j]]}.'
+                            f"{events[event_codes[i+j]]} at "
+                            f"{times[i+j].utc_strftime('%Y %b %d %H:%M:%S')}."
                         )
                     yield sat, rise_time, set_time
                     break
