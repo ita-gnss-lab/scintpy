@@ -12,7 +12,7 @@ from skyfield.toposlib import GeographicPosition
 class Scenario:
     """Scenario of sat-receiver trajectory during a time interval."""
 
-    satelite: EarthSatellite
+    satellite: EarthSatellite
     receiver: GeographicPosition  # NOTE: fixed receiver
     time: Time
     rel_dist_km: np.ndarray

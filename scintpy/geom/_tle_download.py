@@ -286,6 +286,7 @@ def get_norad_ids(
             raise FileNotFoundError("Failed to read the cached data file.") from e
     # match all NORAD satellite identifiers.
     matches: list[str] = re.findall(r"\n1 (\d+)", cleaned_text)
+    logger.trace(f"{len(matches)} NORAD IDs are being used.")
     # comma-separated satellite IDs
     ids = ",".join(matches)
     return ids
