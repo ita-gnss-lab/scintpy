@@ -113,18 +113,21 @@ def _yield_LOS_sats(
                     break
 
 
-def get_sat_orbits(
+def get_scenario(
     sat: EarthSatellite,
     receiver_pos: GeographicPosition,
     rise_time: datetime,
     set_time: datetime,
     sample_time: float = 100,
 ) -> Scenario:
-    """Get satellite orbits.
+    """Get satellite-receiver scenario.
+
+    A scenario comprises all meaningful information for a given receiver position and a
+    line-of-sight satellite.
 
     Parameters
     ----------
-    sats : EarthSatellite
+    sat : EarthSatellite
         The satellite whose orbit should be computed.
     sample_time : float
         Sample time (in seconds). The default is 1 second.

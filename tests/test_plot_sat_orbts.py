@@ -310,7 +310,7 @@ def test_plot_sat_orbts(mocker: MockerFixture) -> None:
     # São José dos Campos
     receiver_pos = wgs84.latlon(-23.20713241666, -45.861737777, 605.088)
 
-    from scintpy.geom import get_sat_orbits, plot_sat_orbits
+    from scintpy.geom import get_scenario, plot_sat_orbits
     from scintpy.geom.orbit_propagation import _get_sats, _yield_LOS_sats
 
     print(f"Aquuui: {len(mock_tle_lines)}")
@@ -322,7 +322,7 @@ def test_plot_sat_orbts(mocker: MockerFixture) -> None:
     for sat, rise_time, set_time in _yield_LOS_sats(
         sats, reference_time, receiver_pos, 5
     ):
-        scenarios.append(get_sat_orbits(sat, receiver_pos, rise_time, set_time))
+        scenarios.append(get_scenario(sat, receiver_pos, rise_time, set_time))
 
     plot_sat_orbits(scenarios, reference_time)
     # NOTE: that is a visual test.
