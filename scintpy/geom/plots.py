@@ -11,7 +11,7 @@ from .scenario import Scenario
 
 def plot_sat_orbits(
     scenarios: Scenario | list[Scenario],
-    reference_time: datetime,
+    reference_times: datetime | list[datetime] | None = None,
 ) -> None:
     """Plot the satellite orbits and their respective velocities.
 
@@ -20,8 +20,12 @@ def plot_sat_orbits(
     scenarios : Scenario | list[Scenario]
         An `Scenario` or a list of `Scenario` objects, where each element contains a
         receiver-satellite trajectory.
-    reference_time: datetime
-        The reference time used to search for the LOS satellites.
+    reference_times: datetime | None
+        The reference time used to search for the LOS satellites, that is, the instant
+        such that, for a given satellite trajectory and receiver position, `rise_time <
+        reference_time < set_time`. One can have multiple reference times, which are
+        input as a list of `datetime`s. By default `None`. If it is left as `None`, no
+        reference time is plotted along with the satellite trajecties.
     """
     # Use a continuous colormap
     cmap = get_cmap("hsv")
@@ -88,13 +92,16 @@ def plot_sat_orbits(
             va="bottom",
             color=color,
         )
-
-    # reference time
-    axs[0].axvline(
-        reference_time,
-        color="red",
-        linestyle="--",
-        linewidth=2,
-        label="Reference time",
-    )
+    if reference_times is not None:
+        if not isinstance(reference_times, list):
+            reference_times = [reference_times]
+        for reference_time in reference_times:
+            # reference time
+            axs[0].axvline(
+                reference_time,
+                color="red",
+                linestyle="--",
+                linewidth=2,
+                label="Reference time",
+            )
     plt.show()

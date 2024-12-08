@@ -667,5 +667,5 @@ def test_plot_cubesat_orbits(mocker: MockerFixture) -> None:
         # search if again for another reference time
         reference_time += timedelta(minutes=30)
 
-    plot_sat_orbits(scenarios, reference_time)
+    plot_sat_orbits(scenarios)
     # NOTE: that is a visual test.
