@@ -157,7 +157,7 @@ def get_scenario(
     if sampling_time_sec is None:
         # TODO: this approach should be replaced when the OOP paradigm is adopted in `scintpy`. When we do so, the object should have an attribute that sets which satellite system is being used.
         sampling_time_sec = 1 if total_LOS_time_sec < 1e3 else 100
-    logger.trace(f"The sampling time was set to {sampling_time_sec} seconds.")
+    logger.trace(f"The sampling time was set to {sampling_time_sec} seconds.") # TODO: This trace is not really necessary, remove it when the workaround is soulved
 
     # number of samples
     n_samples = int(total_LOS_time_sec / sampling_time_sec)
