@@ -51,7 +51,7 @@ def plot_sat_orbits(
             scenario.time.utc_datetime(),
             scenario.velocity_m_s,
             linewidth=2,
-            label=scenario.satelite.name,
+            label=scenario.satellite.name,
             color=color,
         )
         axs[0].legend()
@@ -82,7 +82,7 @@ def plot_sat_orbits(
         axs[1].text(
             scenario.az_rad[-1],
             90 - scenario.alt_deg[-1],
-            f"{scenario.satelite.name}",
+            f"{scenario.satellite.name}",
             fontsize=10,
             ha="center",
             va="bottom",

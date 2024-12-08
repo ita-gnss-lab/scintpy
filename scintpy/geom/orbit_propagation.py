@@ -1,7 +1,7 @@
 """`_orbit_propagation.py` module docstring."""  # TODOC:
 
 from datetime import datetime, timedelta
-from typing import Iterator, Literal, Tuple
+from typing import Iterator, Literal
 
 import numpy as np
 from loguru import logger
@@ -35,7 +35,7 @@ def _yield_LOS_sats(
     reference_time: datetime,
     receiver_pos: GeographicPosition,
     min_elevation_angle: float,
-) -> Iterator[Tuple[EarthSatellite, datetime, datetime]]:
+) -> Iterator[tuple[EarthSatellite, datetime, datetime]]:
     """Yield only those satellites with line of sight.
 
     Parameters
@@ -54,7 +54,7 @@ def _yield_LOS_sats(
 
     Returns
     -------
-    Iterator[Tuple[EarthSatellite, datetime, datetime]]:
+    Iterator[tuple[EarthSatellite, datetime, datetime]]:
         Yeild the satellite with the rise and set time, where
         rise time < `reference_time` < set time.
     """
@@ -118,7 +118,7 @@ def get_scenario(
     receiver_pos: GeographicPosition,
     rise_time: datetime,
     set_time: datetime,
-    sample_time: float = 100,
+    sampling_time_sec: float | None = None,
 ) -> Scenario:
     """Get satellite-receiver scenario.
 
@@ -129,8 +129,8 @@ def get_scenario(
     ----------
     sat : EarthSatellite
         The satellite whose orbit should be computed.
-    sample_time : float
-        Sample time (in seconds). The default is 1 second.
+    sampling_time_sec : float
+        Sample time (in seconds).
     rise_time: datetime
         The UTC rise time of the satellite with respect to the receiver position.
     set_time: datetime
@@ -139,17 +139,28 @@ def get_scenario(
         The receiver position (at the moment, a fiexed position). For receiver
         locations, `scintpy` expects an object of the `GeographicPosition` class from
         the `skyfield` package.
+    sampling_time_sec: float | None, optional
+        The sampling time of the satellite orbit trajectory. By default `None`. If it is
+         left as `None`, a default value is set based on `satellite_system`.
 
     Returns
     -------
     Scenario
         A `Scenario` object which contains the receiver positioning, satellite object,
         rise and set time, and distance relative to the receiver during the whole
-        obersavion window `[rise_time set_time]`, sampled at `sample_time` seconds.
+        obersavion window `[rise_time set_time]`, sampled at `sampling_time_sec`
+        seconds.
     """
-    total_LOS_time = (set_time - rise_time).total_seconds()
+    total_LOS_time_sec = (set_time - rise_time).total_seconds()
+
+     # HACK: if `total_LOS_time_sec < 1e3`, it is assumed to be CubeSat system and the sampling time is set to 1 seconds. Otherwise, it is assumed to be a GNSS system and the sampling time is set to 100 second. This approach is a workaround as it is very imprecise.
+    if sampling_time_sec is None:
+        # TODO: this approach should be replaced when the OOP paradigm is adopted in `scintpy`. When we do so, the object should have an attribute that sets which satellite system is being used.
+        sampling_time_sec = 1 if total_LOS_time_sec < 1e3 else 100
+    logger.trace(f"The sampling time was set to {sampling_time_sec} seconds.")
+
     # number of samples
-    n_samples = int(total_LOS_time / sample_time)
+    n_samples = int(total_LOS_time_sec / sampling_time_sec)
     # init timescale
     ts = load.timescale()
     # temporal support
@@ -184,7 +195,7 @@ def find_LOS_sats(
     username: str = "rdlfresearch@gmail.com",
     password: str = "dustrodrigo15304931",
     min_elevation_angle: float = 5,
-) -> Iterator[Tuple[EarthSatellite, datetime, datetime]]:
+) -> Iterator[tuple[EarthSatellite, datetime, datetime]]:
     """Get satellite with line-of-sight with the receiver position.
 
     Parameters
@@ -216,7 +227,7 @@ def find_LOS_sats(
 
     Returns
     -------
-    Iterator[Tuple[EarthSatellite, datetime, datetime]]
+    Iterator[tuple[EarthSatellite, datetime, datetime]]
         Yeild each LOS satellite.
     """
     if receiver_pos.model.name != "WGS84":
