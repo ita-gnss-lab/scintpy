@@ -1,0 +1,20 @@
+\section{Conclusions}
+\label{sec:conclusions}
+
+This study has successfully synthesized key aspects of the Two-Component Power Law Phase Screen Model (TPPSM), consolidating information previously scattered across various journal articles, conference papers, and books. A new refactored implementation of the TPPSM was developed to address the limitations of existing publicly available codes, particularly the lack of support for simultaneous weak scattering regime simulations and the use of real satellite orbits. The new implementation features enhanced documentation, improved code organization, and increased flexibility for simulating different scintillation severity levels.
+
+The validity of the refactored TPPSM was rigorously assessed by comparing the intensity and phase spectra of simulated scintillation time series with their theoretical counterparts, confirming strong agreement across various scintillation conditions (Weak, Moderate, and Severe). The results demonstrated that the refactored model accurately reproduces expected spectral characteristics, including the phase distortions caused by free-space propagation, which are known to impact GNSS receiver tracking performance.
+
+Furthermore, this study has proposed a systematic methodology for generating synthetic ionospheric scintillation time series using the TPPSM. The methodology allows researchers to configure simulation parameters based on satellite-receiver geometry, ionospheric drift velocity, and appropriate irregularity parameters for different scattering regimes. Additionally, an extrapolation approach was outlined to scale the model parameters across multiple frequency bands, ensuring compatibility with multi-frequency GNSS signals.
+
+Despite these advancements, some limitations remain. The current implementation only supports rectilinear receiver motion, which restricts its applicability to dynamic platforms with arbitrary trajectories, such as aircraft, rockets, and drones. Future work should aim to extend the model to accommodate more complex receiver dynamics, enabling a broader range of GNSS applications.
+
+The TPPSM remains a valuable tool for ionospheric scintillation research, particularly for evaluating the performance of GNSS receivers under different scintillation conditions. The insights from this study are expected to support the development of robust mitigation strategies, improve ionospheric monitoring techniques, and contribute to navigation system resilience in challenging environments.
+
+Future efforts should focus on:
+\begin{itemize} \item Enhancing the model to incorporate arbitrary receiver trajectories for dynamic platforms.
+\item Investigating alternative irregularity parameter estimation techniques, including data-driven and machine learning approaches.
+\item Expanding the model to include additional GNSS frequency bands beyond L1, L2, and L5.
+\end{itemize}
+
+By addressing these challenges, the TPPSM can continue to serve as a fundamental simulation tool for researchers working on ionospheric scintillation characterization, GNSS signal processing, and space weather effects on satellite-based navigation systems.

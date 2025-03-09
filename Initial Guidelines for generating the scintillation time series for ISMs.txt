@@ -1,0 +1,50 @@
+Quick Notes:
+
+Eles obtêm um valor de drift diferente dependendo do valor de tau inputado pelo usuário. Isso faz com que a série temporal resultante apresente um tau correspondente ao valor de tau inputado.
+
+Para evitar problemas, acho melhor settarmos um range de velocidade de drift da ionosfera e não depender de um input de \tau para obter realizações.
+
+*Initial Guidelines for generating the scintillation time series for ISMs* 
+
+Define U, p1, p2 e \mu_0 for the classes:
+
+Mild Scintillation
+Moderate Scintillation
+Severe Scintillation
+
+The labels will be:
+
+Mild Scintillation (S4 <= 0.3)
+Moderate Scintillation (0.3 < S4 <= 0.6)
+Severe Scintillation (S4 > 0.6)
+
+With sublabels with decorrelation time:
+Low: \tau_0 <= 0.5 s
+Medium: 0.5 s < \tau_0 < 2.0 s
+High: \tau_0 >= 2.0 s
+
+Free parameters: v_drift, PRN, receiver position, Date, Anisotropy parameters (a, b, gam_b).
+
+- Pick many receiver positions
+- Choose a date for each period of the year
+- Use all available satellites
+- Use the ionosphere drift as fixed values - 25, 50, 75, 100 and 125
+
+Minor_realizations_amount = 10;
+Major_realizations_amount = Minor_realizations_amount * length(receiver_pos_array) * length(date_array) * length(sat_array) * length(drift_array) * length(class_struct)
+for receiver_pos = receiver_pos_array
+	for date = date_array
+		for sat = sat_array
+			for drift = drift_array
+				for class_struct = class_struct_array
+					for i = 1:Minor_realizations_amounts
+						Make scintillation realization.
+					end
+				end
+			end
+		end
+	end
+end
+
+
+

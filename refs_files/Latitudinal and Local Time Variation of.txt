@@ -1,0 +1,14 @@
+@article{https://doi.org/10.1155/2012/103963,
+author = {Carrano, Charles S. and Valladares, Cesar E. and Groves, Keith M.},
+title = {Latitudinal and Local Time Variation of Ionospheric Turbulence Parameters during the Conjugate Point Equatorial Experiment in Brazil},
+journal = {International Journal of Geophysics},
+volume = {2012},
+number = {1},
+pages = {103963},
+doi = {https://doi.org/10.1155/2012/103963},
+url = {https://onlinelibrary.wiley.com/doi/abs/10.1155/2012/103963},
+eprint = {https://onlinelibrary.wiley.com/doi/pdf/10.1155/2012/103963},
+abstract = {Previous authors have reported on the morphology of GPS scintillations and irregularity zonal drift during the 2002 Conjugate Point Equatorial Experiment (COPEX) in Brazil. In this paper, we characterize the turbulent ionospheric medium that produced these scintillations. Using 10 Hz GPS carrier-to-noise measurements at Boa Vista (2.9°N, 60.7°W), Alta Floresta (9.9°S, 56.1°W), and Campo Grande (20.5°S, 54.7°W), we report on the variation of turbulent intensity, phase spectral index, and irregularity zonal drift as a function of latitude and local time for the evening of 1-2 November 2002. The method of analysis is new and, unlike analytical theories of scintillation based on the Born or Rytov approximations, it is valid when the scintillation index saturates due to multiple-scatter effects. Our principal findings are that (1) the strength of turbulence tended to be largest near the crests of the equatorial anomaly and at early postsunset local times, (2) the turbulent intensity was generally stronger and lasted two hours longer at Campo Grande than at Boa Vista, (3) the phase spectral index was similar at the three stations but increased from 2.5 to 4.5 with local time, and (4) our estimates of zonal irregularity drift are consistent with those provided by the spaced-receiver technique.},
+year = {2012}
+}
+

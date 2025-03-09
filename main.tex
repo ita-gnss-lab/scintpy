@@ -1,0 +1,99 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% --------------------------------------------------------
+% Rho
+% LaTeX Template
+% Version 2.1.1 (01/09/2024)
+%
+% Authors: 
+% Guillermo Jimenez (memo.notess1@gmail.com)
+% Eduardo Gracidas (eduardo.gracidas29@gmail.com)
+% 
+% License:
+% Creative Commons CC BY 4.0
+% --------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[9pt,a4paper,twoside]{rho-class/rho}
+\usepackage[english]{babel}
+
+%% Spanish babel recomendation
+% \usepackage[spanish,es-nodecimaldot,es-noindentfirst]{babel}
+
+\setbool{rho-abstract}{true} % Set false to hide the abstract
+\setbool{corres-info}{false} % Set false to hide the corresponding author section
+
+%----------------------------------------------------------
+% TITLE
+%----------------------------------------------------------
+
+\title{Refactored Implementation and Validation of the Two-Component Power Law Phase Screen Model for GNSS Ionospheric Scintillation Simulation}
+
+%----------------------------------------------------------
+% AUTHORS AND AFFILIATIONS
+%----------------------------------------------------------
+
+\author[1]{Rodrigo de Lima Florindo}
+
+%----------------------------------------------------------
+
+\affil[1]{Aeronautics Institute of Technology (ITA), São José dos Campos, SP, Brazil.}
+
+%----------------------------------------------------------
+% FOOTER INFORMATION
+%----------------------------------------------------------
+
+%\leadauthor{Author last name et al.}
+\institution{Aeronautics Institute of Technology (ITA), São José dos Campos, SP, Brazil.}
+\theday{May 21, 2024} %\today
+
+%----------------------------------------------------------
+% ARTICLE INFORMATION
+%----------------------------------------------------------
+
+\corres{Provide the corresponding author information and publisher here.}
+\email{example@organization.com.}
+\doi{\url{https://www.doi.org/exampledoi/XXXXXXXXXX}}
+
+\received{March 20, 2024}
+\revised{April 16, 2024}
+\accepted{April 20, 2024}
+\published{May 21, 2024}
+
+\license{Rho LaTeX Class \ccLogo\ This document is licensed under Creative Commons CC BY 4.0.}
+
+%----------------------------------------------------------
+% ABSTRACT
+%----------------------------------------------------------
+
+\begin{abstract}
+    Ionospheric scintillation affects GNSS signals, causing rapid amplitude and phase variations that degrade receiver performance. The Two-Component Power Law Phase Screen Model (TPPSM) provides a statistical framework for simulating these effects. However, existing implementations lack support for simultaneous weak scattering simulations and real satellite orbits, while also suffering from poor documentation and organization. This study presents a refactored TPPSM implementation, improving code structure, readability, and flexibility for modeling weak, moderate, and severe scintillation conditions. The refactored version is validated through spectral comparisons, showing strong agreement between simulated and theoretical intensity and phase spectra. A systematic methodology is proposed for generating scintillation time series, incorporating receiver motion, multi-frequency scaling of irregularity parameters, and realistic ionospheric conditions. Although currently limited to rectilinear receiver trajectories, future extensions could accommodate arbitrary motion, benefiting applications such as aerospace navigation, ionospheric monitoring, and GNSS signal resilience studies.
+\end{abstract}
+
+%----------------------------------------------------------
+
+\keywords{Ionospheric scintillation, GNSS, Phase screen model, TPPSM, Ionospheric irregularities, Weak and Strong scattering, Scintillation time series, GNSS signal propagation.}
+
+%----------------------------------------------------------
+
+\begin{document}
+	
+    \maketitle
+    \thispagestyle{firststyle}
+    % \tableofcontents
+    %\linenumbers
+
+%----------------------------------------------------------
+\input{secs/introduction.tex}
+\input{secs/ps_theory.tex}
+\input{secs/irregularity_parameter_estimation.tex}
+\input{secs/refactored_TPPSM.tex}
+\input{secs/time_series_methodology.tex}
+\input{secs/conclusions.tex}
+
+%----------------------------------------------------------
+
+\printbibliography
+
+%----------------------------------------------------------
+
+\end{document}

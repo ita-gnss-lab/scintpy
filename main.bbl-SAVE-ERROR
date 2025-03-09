@@ -1,0 +1,671 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{ynt/global//global/global/global}
+    \entry{harrington2001time}{book}{}{}
+      \name{author}{1}{}{%
+        {{hash=3c57adf656585ad2377a39f04ad157e4}{%
+           family={Harrington},
+           familyi={H\bibinitperiod},
+           given={R.F.},
+           giveni={R\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Wiley}%
+      }
+      \strng{namehash}{3c57adf656585ad2377a39f04ad157e4}
+      \strng{fullhash}{3c57adf656585ad2377a39f04ad157e4}
+      \strng{fullhashraw}{3c57adf656585ad2377a39f04ad157e4}
+      \strng{bibnamehash}{3c57adf656585ad2377a39f04ad157e4}
+      \strng{authorbibnamehash}{3c57adf656585ad2377a39f04ad157e4}
+      \strng{authornamehash}{3c57adf656585ad2377a39f04ad157e4}
+      \strng{authorfullhash}{3c57adf656585ad2377a39f04ad157e4}
+      \strng{authorfullhashraw}{3c57adf656585ad2377a39f04ad157e4}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{isbn}{9780471208068}
+      \field{series}{IEEE Press Series on Electromagnetic Wave Theory}
+      \field{title}{Time-Harmonic Electromagnetic Fields}
+      \field{year}{2001}
+      \verb{urlraw}
+      \verb https://books.google.com.br/books?id=4-6kNAEACAAJ
+      \endverb
+      \verb{url}
+      \verb https://books.google.com.br/books?id=4-6kNAEACAAJ
+      \endverb
+    \endentry
+    \entry{SizeShapeOrientationOfEquatorialAnomalyScintillations}{article}{}{}
+      \name{author}{4}{}{%
+        {{hash=ff36247e3b1963bc8a564ab03006b0c2}{%
+           family={Kintner},
+           familyi={K\bibinitperiod},
+           given={P.\bibnamedelimi M.},
+           giveni={P\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=c18f5627319d4a8914ff52e273f97f83}{%
+           family={Ledvina},
+           familyi={L\bibinitperiod},
+           given={B.\bibnamedelimi M.},
+           giveni={B\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=efaf55a447a1b4fd889b0f2f0119b611}{%
+           family={Paula},
+           familyi={P\bibinitperiod},
+           given={E.\bibnamedelimi R.},
+           giveni={E\bibinitperiod\bibinitdelim R\bibinitperiod},
+           prefix={de},
+           prefixi={d\bibinitperiod}}}%
+        {{hash=dd6a9c687430571ef7cd4b26ccdd363a}{%
+           family={Kantor},
+           familyi={K\bibinitperiod},
+           given={I.\bibnamedelimi J.},
+           giveni={I\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+      }
+      \strng{namehash}{db78b6fe14fb4935bf645167962ebb47}
+      \strng{fullhash}{9413cde3c093ebd7620a706c597f69e4}
+      \strng{fullhashraw}{9413cde3c093ebd7620a706c597f69e4}
+      \strng{bibnamehash}{9413cde3c093ebd7620a706c597f69e4}
+      \strng{authorbibnamehash}{9413cde3c093ebd7620a706c597f69e4}
+      \strng{authornamehash}{db78b6fe14fb4935bf645167962ebb47}
+      \strng{authorfullhash}{9413cde3c093ebd7620a706c597f69e4}
+      \strng{authorfullhashraw}{9413cde3c093ebd7620a706c597f69e4}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{GPS L1 C/A signal scintillation data were collected at the equatorial anomaly over a period of three months using five receivers spaced on magnetic east-west and north-south axes to examine the speed, orientation, shape, width, and duration of GPS scintillation fade patterns. The nighttime speeds were primarily eastward in the range of 100–200 m/s with a significant spread to both larger values and negative (westward) values as expected, given the known behavior of ionospheric drifts and GPS signal path movement. The characteristic velocity was found to be small so that the true velocity was equal to the apparent velocity to a very good approximation. The orientation of the scintillation fade patterns was organized by a simple projection model of the magnetic field along the GPS signal path onto the horizontal plane when the signal paths were aligned no closer than 60° from the magnetic field. The shape of the scintillation fade pattern was greatly elongated in the magnetic north-south direction, and no change could be detected over a distance of 1 km. The east-west widths of the scintillation fade patterns were variable, but after normalizing to the elevation angle, accounting for the fade orientation, and eliminating signal paths within 60° of the magnetic field, an organized scale length of about 450 m was determined. The duration of the scintillation fade patterns was examined using the optimal cross-correlation amplitude as a measure of change. For a 5 s duration, 49\% of the optimal cross-correlation amplitudes exceed a value of 0.8.}
+      \field{journaltitle}{Radio Science}
+      \field{number}{2}
+      \field{title}{Size, shape, orientation, speed, and duration of GPS equatorial anomaly scintillations}
+      \field{volume}{39}
+      \field{year}{2004}
+      \verb{doi}
+      \verb https://doi.org/10.1029/2003RS002878
+      \endverb
+      \verb{eprint}
+      \verb https://agupubs.onlinelibrary.wiley.com/doi/pdf/10.1029/2003RS002878
+      \endverb
+      \verb{urlraw}
+      \verb https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2003RS002878
+      \endverb
+      \verb{url}
+      \verb https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2003RS002878
+      \endverb
+      \keyw{ionospheric propagation,ionospheric irregularities,space and satellite communication}
+    \endentry
+    \entry{rinoTheoryScintillationApplications2011}{book}{}{}
+      \name{author}{1}{}{%
+        {{hash=3ec66f77f1a710c88cec0bdb21242a52}{%
+           family={Rino},
+           familyi={R\bibinitperiod},
+           given={Charles},
+           giveni={C\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {John Wiley \& Sons}%
+      }
+      \strng{namehash}{3ec66f77f1a710c88cec0bdb21242a52}
+      \strng{fullhash}{3ec66f77f1a710c88cec0bdb21242a52}
+      \strng{fullhashraw}{3ec66f77f1a710c88cec0bdb21242a52}
+      \strng{bibnamehash}{3ec66f77f1a710c88cec0bdb21242a52}
+      \strng{authorbibnamehash}{3ec66f77f1a710c88cec0bdb21242a52}
+      \strng{authornamehash}{3ec66f77f1a710c88cec0bdb21242a52}
+      \strng{authorfullhash}{3ec66f77f1a710c88cec0bdb21242a52}
+      \strng{authorfullhashraw}{3ec66f77f1a710c88cec0bdb21242a52}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{The Theory of Scintillation with Applications in Remote Sensing}
+      \field{year}{2011}
+    \endentry
+    \entry{CarranoBrazil2012}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=92442b56929fc05f91c25de5478c8735}{%
+           family={Carrano},
+           familyi={C\bibinitperiod},
+           given={Charles\bibnamedelima S.},
+           giveni={C\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+        {{hash=3f0b6b02a8f506c049889583185abcf7}{%
+           family={Valladares},
+           familyi={V\bibinitperiod},
+           given={Cesar\bibnamedelima E.},
+           giveni={C\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+        {{hash=429947abe169621b8ad1482e03caa488}{%
+           family={Groves},
+           familyi={G\bibinitperiod},
+           given={Keith\bibnamedelima M.},
+           giveni={K\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+      }
+      \strng{namehash}{95f3b247dcae18f2bcbf3820bb907b43}
+      \strng{fullhash}{34ea666f96b597c095f2174a4c11d957}
+      \strng{fullhashraw}{34ea666f96b597c095f2174a4c11d957}
+      \strng{bibnamehash}{34ea666f96b597c095f2174a4c11d957}
+      \strng{authorbibnamehash}{34ea666f96b597c095f2174a4c11d957}
+      \strng{authornamehash}{95f3b247dcae18f2bcbf3820bb907b43}
+      \strng{authorfullhash}{34ea666f96b597c095f2174a4c11d957}
+      \strng{authorfullhashraw}{34ea666f96b597c095f2174a4c11d957}
+      \field{extraname}{1}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Previous authors have reported on the morphology of GPS scintillations and irregularity zonal drift during the 2002 Conjugate Point Equatorial Experiment (COPEX) in Brazil. In this paper, we characterize the turbulent ionospheric medium that produced these scintillations. Using 10 Hz GPS carrier-to-noise measurements at Boa Vista (2.9°N, 60.7°W), Alta Floresta (9.9°S, 56.1°W), and Campo Grande (20.5°S, 54.7°W), we report on the variation of turbulent intensity, phase spectral index, and irregularity zonal drift as a function of latitude and local time for the evening of 1-2 November 2002. The method of analysis is new and, unlike analytical theories of scintillation based on the Born or Rytov approximations, it is valid when the scintillation index saturates due to multiple-scatter effects. Our principal findings are that (1) the strength of turbulence tended to be largest near the crests of the equatorial anomaly and at early postsunset local times, (2) the turbulent intensity was generally stronger and lasted two hours longer at Campo Grande than at Boa Vista, (3) the phase spectral index was similar at the three stations but increased from 2.5 to 4.5 with local time, and (4) our estimates of zonal irregularity drift are consistent with those provided by the spaced-receiver technique.}
+      \field{journaltitle}{International Journal of Geophysics}
+      \field{number}{1}
+      \field{title}{Latitudinal and Local Time Variation of Ionospheric Turbulence Parameters during the Conjugate Point Equatorial Experiment in Brazil}
+      \field{volume}{2012}
+      \field{year}{2012}
+      \field{pages}{103963}
+      \range{pages}{1}
+      \verb{doi}
+      \verb https://doi.org/10.1155/2012/103963
+      \endverb
+      \verb{eprint}
+      \verb https://onlinelibrary.wiley.com/doi/pdf/10.1155/2012/103963
+      \endverb
+      \verb{urlraw}
+      \verb https://onlinelibrary.wiley.com/doi/abs/10.1155/2012/103963
+      \endverb
+      \verb{url}
+      \verb https://onlinelibrary.wiley.com/doi/abs/10.1155/2012/103963
+      \endverb
+    \endentry
+    \entry{Carrano2016OverviewOfTwoComponentPowerLaw}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=92442b56929fc05f91c25de5478c8735}{%
+           family={Carrano},
+           familyi={C\bibinitperiod},
+           given={Charles\bibnamedelima S.},
+           giveni={C\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+        {{hash=e6bdf54550e69ef799f188d7baf4ff7d}{%
+           family={Rino},
+           familyi={R\bibinitperiod},
+           given={Charles\bibnamedelima L.},
+           giveni={C\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+      }
+      \strng{namehash}{bcbc858937ba5fff2b4b7e53f87a892f}
+      \strng{fullhash}{bcbc858937ba5fff2b4b7e53f87a892f}
+      \strng{fullhashraw}{bcbc858937ba5fff2b4b7e53f87a892f}
+      \strng{bibnamehash}{bcbc858937ba5fff2b4b7e53f87a892f}
+      \strng{authorbibnamehash}{bcbc858937ba5fff2b4b7e53f87a892f}
+      \strng{authornamehash}{bcbc858937ba5fff2b4b7e53f87a892f}
+      \strng{authorfullhash}{bcbc858937ba5fff2b4b7e53f87a892f}
+      \strng{authorfullhashraw}{bcbc858937ba5fff2b4b7e53f87a892f}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Abstract We extend the power law phase screen theory for ionospheric scintillation to account for the case where the refractive index irregularities follow a two-component inverse power law spectrum. The two-component model includes, as special cases, an unmodified power law and a modified power law with spectral break that may assume the role of an outer scale, intermediate break scale, or inner scale. As such, it provides a framework for investigating the effects of a spectral break on the scintillation statistics. Using this spectral model, we solve the fourth moment equation governing intensity variations following propagation through two-dimensional field-aligned irregularities in the ionosphere. A specific normalization is invoked that exploits self-similar properties of the structure to achieve a universal scaling, such that different combinations of perturbation strength, propagation distance, and frequency produce the same results. The numerical algorithm is validated using new theoretical predictions for the behavior of the scintillation index and intensity correlation length under strong scatter conditions. A series of numerical experiments are conducted to investigate the morphologies of the intensity spectrum, scintillation index, and intensity correlation length as functions of the spectral indices and strength of scatter; retrieve phase screen parameters from intensity scintillation observations; explore the relative contributions to the scintillation due to large- and small-scale ionospheric structures; and quantify the conditions under which a general spectral break will influence the scintillation statistics.}
+      \field{journaltitle}{Radio Science}
+      \field{number}{6}
+      \field{title}{A theory of scintillation for two-component power law irregularity spectra: Overview and numerical results}
+      \field{volume}{51}
+      \field{year}{2016}
+      \field{pages}{789\bibrangedash 813}
+      \range{pages}{25}
+      \verb{doi}
+      \verb https://doi.org/10.1002/2015RS005903
+      \endverb
+      \verb{eprint}
+      \verb https://agupubs.onlinelibrary.wiley.com/doi/pdf/10.1002/2015RS005903
+      \endverb
+      \verb{urlraw}
+      \verb https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1002/2015RS005903
+      \endverb
+      \verb{url}
+      \verb https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1002/2015RS005903
+      \endverb
+      \keyw{scintillation,ionospheric irregularities,scattering,two-component spectrum,plasma turbulence,diffraction}
+    \endentry
+    \entry{carrano2017maximum}{inproceedings}{}{}
+      \name{author}{3}{}{%
+        {{hash=92442b56929fc05f91c25de5478c8735}{%
+           family={Carrano},
+           familyi={C\bibinitperiod},
+           given={Charles\bibnamedelima S},
+           giveni={C\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+        {{hash=e6bdf54550e69ef799f188d7baf4ff7d}{%
+           family={Rino},
+           familyi={R\bibinitperiod},
+           given={Charles\bibnamedelima L},
+           giveni={C\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+        {{hash=429947abe169621b8ad1482e03caa488}{%
+           family={Groves},
+           familyi={G\bibinitperiod},
+           given={Keith\bibnamedelima M},
+           giveni={K\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Radio Science Publications Alexandria}%
+      }
+      \strng{namehash}{95f3b247dcae18f2bcbf3820bb907b43}
+      \strng{fullhash}{9f58ae34a57be8d71eb7b2fe1cda33bc}
+      \strng{fullhashraw}{9f58ae34a57be8d71eb7b2fe1cda33bc}
+      \strng{bibnamehash}{9f58ae34a57be8d71eb7b2fe1cda33bc}
+      \strng{authorbibnamehash}{9f58ae34a57be8d71eb7b2fe1cda33bc}
+      \strng{authornamehash}{95f3b247dcae18f2bcbf3820bb907b43}
+      \strng{authorfullhash}{9f58ae34a57be8d71eb7b2fe1cda33bc}
+      \strng{authorfullhashraw}{9f58ae34a57be8d71eb7b2fe1cda33bc}
+      \field{extraname}{2}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{15th International Ionospheric Effects Symposium}
+      \field{title}{Maximum likelihood estimation of phase screen parameters from ionospheric scintillation spectra}
+      \field{year}{2017}
+      \field{pages}{1\bibrangedash 11}
+      \range{pages}{11}
+    \endentry
+    \entry{Prol2017_Comparative_Study}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=a94446a6a92fc58e50f988d09e2cbc1f}{%
+           family={Prol},
+           familyi={P\bibinitperiod},
+           given={Fabricio},
+           giveni={F\bibinitperiod}}}%
+        {{hash=fb85e2c1618eb6e615cd65748e423762}{%
+           family={Camargo},
+           familyi={C\bibinitperiod},
+           given={Paulo},
+           giveni={P\bibinitperiod}}}%
+        {{hash=82b61dceefe7fc793ffdd69e187e71b6}{%
+           family={Muella},
+           familyi={M\bibinitperiod},
+           given={MTAH},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{79d330a746333d47d93c8eef6f8e7169}
+      \strng{fullhash}{8777e14dbf0346cd7f30cc469122783b}
+      \strng{fullhashraw}{8777e14dbf0346cd7f30cc469122783b}
+      \strng{bibnamehash}{8777e14dbf0346cd7f30cc469122783b}
+      \strng{authorbibnamehash}{8777e14dbf0346cd7f30cc469122783b}
+      \strng{authornamehash}{79d330a746333d47d93c8eef6f8e7169}
+      \strng{authorfullhash}{8777e14dbf0346cd7f30cc469122783b}
+      \strng{authorfullhashraw}{8777e14dbf0346cd7f30cc469122783b}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Boletim de Ciencias Geodesicas}
+      \field{month}{12}
+      \field{title}{Comparative study of methods for calculating ionospheric points and describing the GNSS signal path}
+      \field{volume}{23}
+      \field{year}{2017}
+      \field{pages}{669\bibrangedash 683}
+      \range{pages}{15}
+      \verb{doi}
+      \verb 10.1590/s1982-21702017000400044
+      \endverb
+    \endentry
+    \entry{JiaoScintillationOnGPSSignalsForDynamicPlatforms2018}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=b56f7a48e9b439a9aea32c2e96e104a1}{%
+           family={Jiao},
+           familyi={J\bibinitperiod},
+           given={Yu},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=3ec66f77f1a710c88cec0bdb21242a52}{%
+           family={Rino},
+           familyi={R\bibinitperiod},
+           given={Charles},
+           giveni={C\bibinitperiod}}}%
+        {{hash=1a2ae1be8c33254ed09aa712a9bcb6af}{%
+           family={Morton},
+           familyi={M\bibinitperiod},
+           given={Yu\bibnamedelima T.},
+           giveni={Y\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
+      }
+      \strng{namehash}{4097b2428571ca855fb8ffd9aee180f7}
+      \strng{fullhash}{d77b989f7c6bbe95e9a30b1e1d60302a}
+      \strng{fullhashraw}{d77b989f7c6bbe95e9a30b1e1d60302a}
+      \strng{bibnamehash}{d77b989f7c6bbe95e9a30b1e1d60302a}
+      \strng{authorbibnamehash}{d77b989f7c6bbe95e9a30b1e1d60302a}
+      \strng{authornamehash}{4097b2428571ca855fb8ffd9aee180f7}
+      \strng{authorfullhash}{d77b989f7c6bbe95e9a30b1e1d60302a}
+      \strng{authorfullhashraw}{d77b989f7c6bbe95e9a30b1e1d60302a}
+      \field{extraname}{1}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Abstract This paper presents a physics-based, data-consistent, multifrequency GPS scintillation signal simulator for dynamic platforms in the equatorial region. This simulator is based on a two-dimensional two-component power-law phase screen model which is described by a compact set of parameters. The time scale factor is mainly investigated in this paper, which determines the decorrelation time of the simulation signal and is affected by various factors including propagation geometry, irregularity drift velocity, and dynamics of the platform. The comparison between the initialization and simulation data for stationary receivers shows the effectiveness of the simulator. In addition, this paper examines the influence of the platform dynamics on simulation signals with respect to the geomagnetic field direction and the irregularity drift velocity. The simulator presented in this paper will provide a viable tool for dynamic GPS scintillation signal simulation and will aid the design for robust receiver processing algorithms during scintillation for dynamic platforms. © 2018 The Authors. Journal of the Institute of Navigation published by Wiley Periodicals, Inc. on behalf of Institute of Navigation}
+      \field{journaltitle}{NAVIGATION}
+      \field{number}{2}
+      \field{title}{Ionospheric Scintillation Simulation on Equatorial GPS Signals for Dynamic Platforms}
+      \field{volume}{65}
+      \field{year}{2018}
+      \field{pages}{263\bibrangedash 274}
+      \range{pages}{12}
+      \verb{doi}
+      \verb https://doi.org/10.1002/navi.231
+      \endverb
+      \verb{eprint}
+      \verb https://onlinelibrary.wiley.com/doi/pdf/10.1002/navi.231
+      \endverb
+      \verb{urlraw}
+      \verb https://onlinelibrary.wiley.com/doi/abs/10.1002/navi.231
+      \endverb
+      \verb{url}
+      \verb https://onlinelibrary.wiley.com/doi/abs/10.1002/navi.231
+      \endverb
+    \endentry
+    \entry{JiaoMultifrequencyScintillationOnGPSSignalsStaticPlatforms2018}{article}{}{}
+      \name{author}{5}{}{%
+        {{hash=b56f7a48e9b439a9aea32c2e96e104a1}{%
+           family={Jiao},
+           familyi={J\bibinitperiod},
+           given={Yu},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=39e5f64cf66a06604210c5e7d78f1f1c}{%
+           family={Xu},
+           familyi={X\bibinitperiod},
+           given={Dongyang},
+           giveni={D\bibinitperiod}}}%
+        {{hash=e6bdf54550e69ef799f188d7baf4ff7d}{%
+           family={Rino},
+           familyi={R\bibinitperiod},
+           given={Charles\bibnamedelima L.},
+           giveni={C\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+        {{hash=1a2ae1be8c33254ed09aa712a9bcb6af}{%
+           family={Morton},
+           familyi={M\bibinitperiod},
+           given={Yu\bibnamedelima T.},
+           giveni={Y\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
+        {{hash=92442b56929fc05f91c25de5478c8735}{%
+           family={Carrano},
+           familyi={C\bibinitperiod},
+           given={Charles\bibnamedelima S.},
+           giveni={C\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+      }
+      \strng{namehash}{4097b2428571ca855fb8ffd9aee180f7}
+      \strng{fullhash}{c8a0841c32ef85030ce4726616bdc1f4}
+      \strng{fullhashraw}{c8a0841c32ef85030ce4726616bdc1f4}
+      \strng{bibnamehash}{c8a0841c32ef85030ce4726616bdc1f4}
+      \strng{authorbibnamehash}{c8a0841c32ef85030ce4726616bdc1f4}
+      \strng{authornamehash}{4097b2428571ca855fb8ffd9aee180f7}
+      \strng{authorfullhash}{c8a0841c32ef85030ce4726616bdc1f4}
+      \strng{authorfullhashraw}{c8a0841c32ef85030ce4726616bdc1f4}
+      \field{extraname}{2}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE Transactions on Aerospace and Electronic Systems}
+      \field{number}{4}
+      \field{title}{A Multifrequency GPS Signal Strong Equatorial Ionospheric Scintillation Simulator: Algorithm, Performance, and Characterization}
+      \field{volume}{54}
+      \field{year}{2018}
+      \field{pages}{1947\bibrangedash 1965}
+      \range{pages}{19}
+      \verb{doi}
+      \verb 10.1109/TAES.2018.2805232
+      \endverb
+      \keyw{Receivers;Global Positioning System;Global navigation satellite system;Mathematical model;Plasmas;Geometry;Scattering;Equatorial ionospheric scintillation;multifrequency GPS;scintillation simulation}
+    \endentry
+    \entry{rinoCompactMultifrequencyGNSS2018}{article}{}{}
+      \name{author}{6}{}{%
+        {{hash=3ec66f77f1a710c88cec0bdb21242a52}{%
+           family={Rino},
+           familyi={R\bibinitperiod},
+           given={Charles},
+           giveni={C\bibinitperiod}}}%
+        {{hash=387e6f31aed98601f7f28e17ed0eea51}{%
+           family={Breitsch},
+           familyi={B\bibinitperiod},
+           given={Brian},
+           giveni={B\bibinitperiod}}}%
+        {{hash=e40b4e5bbacf283cd39e62e795cd083c}{%
+           family={Morton},
+           familyi={M\bibinitperiod},
+           given={Yu},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=b56f7a48e9b439a9aea32c2e96e104a1}{%
+           family={Jiao},
+           familyi={J\bibinitperiod},
+           given={Yu},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=39e5f64cf66a06604210c5e7d78f1f1c}{%
+           family={Xu},
+           familyi={X\bibinitperiod},
+           given={Dongyang},
+           giveni={D\bibinitperiod}}}%
+        {{hash=a5583a209c373e6d126166ebb3a0ae5a}{%
+           family={Carrano},
+           familyi={C\bibinitperiod},
+           given={Charles},
+           giveni={C\bibinitperiod}}}%
+      }
+      \strng{namehash}{61b8298523b5c6c512e42e541fbc0a81}
+      \strng{fullhash}{1ddb57f4cf28e8786d03c6577de250cd}
+      \strng{fullhashraw}{1ddb57f4cf28e8786d03c6577de250cd}
+      \strng{bibnamehash}{1ddb57f4cf28e8786d03c6577de250cd}
+      \strng{authorbibnamehash}{1ddb57f4cf28e8786d03c6577de250cd}
+      \strng{authornamehash}{61b8298523b5c6c512e42e541fbc0a81}
+      \strng{authorfullhash}{1ddb57f4cf28e8786d03c6577de250cd}
+      \strng{authorfullhashraw}{1ddb57f4cf28e8786d03c6577de250cd}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{We present a scintillation model that generates complex scintillation realizations using two-dimensional phase-screen calculations. A compact parameter set simplifies the model. The parameters can be adjusted to reproduce statistically equivalent realizations of target multi-frequency GNSS intensity and phase scintillation time series or defaulted to representative values. Geometric range and TEC inputs can be incorporated to generate realizations of baseband GNSS signals for processor performance evaluation. Selecting model parameters is guided by an efficient encapsulation of the two-dimensional phase-screen theory. Motion of the propagation path through ionospheric structure generates temporal variation. The phase-screen theory incorporates space-to-time conversion via a ratio of the Fresnel scale to an effective scan velocity. A universal strength parameter adjusts the strength of the scintillation. The model is an encapsulation of results that have been used for GPS performance analysis work that is cited in the paper. A MATLAB implementation of the model with examples has been made available.}
+      \field{issn}{2161-4296}
+      \field{journaltitle}{NAVIGATION}
+      \field{langid}{english}
+      \field{number}{4}
+      \field{title}{A Compact Multi-Frequency {{GNSS}} Scintillation Model}
+      \field{urlyear}{2024-08-02}
+      \field{volume}{65}
+      \field{year}{2018}
+      \field{pages}{563\bibrangedash 569}
+      \range{pages}{7}
+      \verb{doi}
+      \verb 10.1002/navi.263
+      \endverb
+      \verb{file}
+      \verb /home/tapyu/.local/share/zotero/storage/678ZEXLQ/navi.html
+      \endverb
+      \verb{urlraw}
+      \verb https://onlinelibrary.wiley.com/doi/abs/10.1002/navi.263
+      \endverb
+      \verb{url}
+      \verb https://onlinelibrary.wiley.com/doi/abs/10.1002/navi.263
+      \endverb
+    \endentry
+    \entry{Carrano2018IntermadiateScaleCharacterization}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=3ec66f77f1a710c88cec0bdb21242a52}{%
+           family={Rino},
+           familyi={R\bibinitperiod},
+           given={Charles},
+           giveni={C\bibinitperiod}}}%
+        {{hash=a5583a209c373e6d126166ebb3a0ae5a}{%
+           family={Carrano},
+           familyi={C\bibinitperiod},
+           given={Charles},
+           giveni={C\bibinitperiod}}}%
+      }
+      \strng{namehash}{d34e960746bec52d3ba01d8dfd664384}
+      \strng{fullhash}{d34e960746bec52d3ba01d8dfd664384}
+      \strng{fullhashraw}{d34e960746bec52d3ba01d8dfd664384}
+      \strng{bibnamehash}{d34e960746bec52d3ba01d8dfd664384}
+      \strng{authorbibnamehash}{d34e960746bec52d3ba01d8dfd664384}
+      \strng{authornamehash}{d34e960746bec52d3ba01d8dfd664384}
+      \strng{authorfullhash}{d34e960746bec52d3ba01d8dfd664384}
+      \strng{authorfullhashraw}{d34e960746bec52d3ba01d8dfd664384}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Abstract Characterization of ionospheric structure starts with spectral analysis of one-dimensional time series. Unknown spectral density function (SDF) parameters are estimated by model-fitting procedures, which will be referred to in this paper collectively as irregularity parameter estimation. If the diagnostic SDF has a power law form, linear least squares estimation (LLE) can be used to estimate the power law parameters. In this paper simulations are used to investigate LLE estimates of diagnostic single-component and two-component power law SDFs. There is a known turbulent strength bias and a more troublesome correlation between the turbulent strength and the spectral index. We found that this intrinsic property of LLE estimators completely explains a similar correlation long observed in both in situ and radio propagation ionospheric diagnostic measurements. Maximum likelihood estimation (MLE) is superior to LLE but requires knowledge of the probability distribution function of the SDF estimator. To this end one can exploit the fact that the probability distribution function of a periodogram about the its true mean is well approximated by a χD distribution. With an hypothesized true mean SDF defined by a small set of parameters, the parameters can be adjusted to maximize the likelihood that the periodogram was generated by the parameterized SDF. Furthermore, algorithms that adjust parameters to maximize likelihood can use functions of the defining parameters being adjusted to improve performance. Recognizing that correlation between turbulent strength and spectral index estimates is an intrinsic measurement property, error minimization is particularly important. A modified MLE procedure is presented that provides robust initiation and good two-component power law parameter estimates.}
+      \field{journaltitle}{Radio Science}
+      \field{number}{11}
+      \field{title}{On the Characterization of Intermediate-Scale Ionospheric Structure}
+      \field{volume}{53}
+      \field{year}{2018}
+      \field{pages}{1316\bibrangedash 1327}
+      \range{pages}{12}
+      \verb{doi}
+      \verb https://doi.org/10.1029/2018RS006709
+      \endverb
+      \verb{eprint}
+      \verb https://agupubs.onlinelibrary.wiley.com/doi/pdf/10.1029/2018RS006709
+      \endverb
+      \verb{urlraw}
+      \verb https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2018RS006709
+      \endverb
+      \verb{url}
+      \verb https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2018RS006709
+      \endverb
+      \keyw{parameter estimation,power law spectra,ionospheric structure}
+    \endentry
+    \entry{xuTwoparameterMultifrequencyGPS2020}{article}{}{}
+      \name{author}{5}{}{%
+        {{hash=39e5f64cf66a06604210c5e7d78f1f1c}{%
+           family={Xu},
+           familyi={X\bibinitperiod},
+           given={Dongyang},
+           giveni={D\bibinitperiod}}}%
+        {{hash=52abdd01ed6dc43835da4a1e58b06801}{%
+           family={Morton},
+           familyi={M\bibinitperiod},
+           given={Y.T.\bibnamedelimi Jade},
+           giveni={Y\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{hash=e6bdf54550e69ef799f188d7baf4ff7d}{%
+           family={Rino},
+           familyi={R\bibinitperiod},
+           given={Charles\bibnamedelima L.},
+           giveni={C\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+        {{hash=92442b56929fc05f91c25de5478c8735}{%
+           family={Carrano},
+           familyi={C\bibinitperiod},
+           given={Charles\bibnamedelima S.},
+           giveni={C\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+        {{hash=b56f7a48e9b439a9aea32c2e96e104a1}{%
+           family={Jiao},
+           familyi={J\bibinitperiod},
+           given={Yu},
+           giveni={Y\bibinitperiod}}}%
+      }
+      \strng{namehash}{1eecf7a39a6ff8ed1b1d30183eccb074}
+      \strng{fullhash}{5b84705776fbb45bfeae4dcb1ff38898}
+      \strng{fullhashraw}{5b84705776fbb45bfeae4dcb1ff38898}
+      \strng{bibnamehash}{5b84705776fbb45bfeae4dcb1ff38898}
+      \strng{authorbibnamehash}{5b84705776fbb45bfeae4dcb1ff38898}
+      \strng{authornamehash}{1eecf7a39a6ff8ed1b1d30183eccb074}
+      \strng{authorfullhash}{5b84705776fbb45bfeae4dcb1ff38898}
+      \strng{authorfullhashraw}{5b84705776fbb45bfeae4dcb1ff38898}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{This paper presents a physics-based, multifrequency, strong scintillation simulator that requires only two input parameters: the S4 index and decorrelation time τ0. This simulator is developed based on the two-component power-law phase screen model, which is specified by five parameters and suitable for representation of strong equatorial scintillation. By setting three of the model parameters to representative values, numerical mappings from the user input parameter set (S4 and τ0) to the remaining model parameter subset of two parameters can be established through numerical evaluation. The numerical mappings are then used to drive the scintillation model to generate time series of scintillation amplitude and phase. A large group of strong scintillation data (with S4 {$>$} 0.6) from two equatorial sites are processed to obtain the representative values of the three model default parameters and to validate the numerical parameter mappings. A MATLAB implementation of the scintillation simulator has been made available.}
+      \field{issn}{2161-4296}
+      \field{journaltitle}{NAVIGATION}
+      \field{langid}{english}
+      \field{number}{1}
+      \field{shorttitle}{A Two-Parameter Multifrequency {{GPS}} Signal Simulator for Strong Equatorial Ionospheric Scintillation}
+      \field{title}{A Two-Parameter Multifrequency {{GPS}} Signal Simulator for Strong Equatorial Ionospheric Scintillation: Modeling and Parameter Characterization}
+      \field{urlyear}{2024-07-01}
+      \field{volume}{67}
+      \field{year}{2020}
+      \field{pages}{181\bibrangedash 195}
+      \range{pages}{15}
+      \verb{doi}
+      \verb 10.1002/navi.350
+      \endverb
+      \verb{file}
+      \verb /home/tapyu/.local/share/zotero/storage/KWKA83KE/Xu et al. - 2020 - A two-parameter multifrequency GPS signal simulato.pdf;/home/tapyu/.local/share/zotero/storage/Z72X5JAW/navi.html
+      \endverb
+      \verb{urlraw}
+      \verb https://onlinelibrary.wiley.com/doi/abs/10.1002/navi.350
+      \endverb
+      \verb{url}
+      \verb https://onlinelibrary.wiley.com/doi/abs/10.1002/navi.350
+      \endverb
+    \endentry
+    \entry{vasylyevModelingIonosphericScintillation2022}{article}{}{}
+      \name{author}{5}{}{%
+        {{hash=927c9ed368aaafb513b2b30716c71c84}{%
+           family={Vasylyev},
+           familyi={V\bibinitperiod},
+           given={Dmytro},
+           giveni={D\bibinitperiod}}}%
+        {{hash=95ab6b74bcfd88617353f0d869d02c5c}{%
+           family={Béniguel},
+           familyi={B\bibinitperiod},
+           given={Yannick},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=5a2e682fc596c82fa9d04bad07aca383}{%
+           family={Volker},
+           familyi={V\bibinitperiod},
+           given={Wilken},
+           giveni={W\bibinitperiod}}}%
+        {{hash=1f13e56d97c040916b6d1bea6acd69c2}{%
+           family={Kriegel},
+           familyi={K\bibinitperiod},
+           given={Martin},
+           giveni={M\bibinitperiod}}}%
+        {{hash=b2ea6f1e33f0f7b8232d2ea41e482e25}{%
+           family={Berdermann},
+           familyi={B\bibinitperiod},
+           given={Jens},
+           giveni={J\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {EDP Sciences}%
+      }
+      \strng{namehash}{4e56f979ffe28bc586329a865950918e}
+      \strng{fullhash}{002619ff267f3b868ab89fc5713c17e6}
+      \strng{fullhashraw}{002619ff267f3b868ab89fc5713c17e6}
+      \strng{bibnamehash}{002619ff267f3b868ab89fc5713c17e6}
+      \strng{authorbibnamehash}{002619ff267f3b868ab89fc5713c17e6}
+      \strng{authornamehash}{4e56f979ffe28bc586329a865950918e}
+      \strng{authorfullhash}{002619ff267f3b868ab89fc5713c17e6}
+      \strng{authorfullhashraw}{002619ff267f3b868ab89fc5713c17e6}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Space Weather and Space Climate}
+      \field{title}{Modeling of Ionospheric Scintillation}
+      \field{urlyear}{2024-07-19}
+      \field{volume}{12}
+      \field{year}{2022}
+      \field{pages}{22}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 	https://doi.org/10.1051/swsc/2022016
+      \endverb
+      \verb{file}
+      \verb /home/tapyu/.local/share/zotero/storage/68X3XT7G/Vasylyev et al. - 2022 - Modeling of ionospheric scintillation.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://www.swsc-journal.org/articles/swsc/abs/2022/01/swsc210095/swsc210095.html
+      \endverb
+      \verb{url}
+      \verb https://www.swsc-journal.org/articles/swsc/abs/2022/01/swsc210095/swsc210095.html
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

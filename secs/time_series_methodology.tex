@@ -1,0 +1,30 @@
+\section{A Generic Methodology for Generating Ionospheric Scintillation Time Series Using the TPPSM}
+\label{sec:time_series_methodology}
+In order to generate meaningful synthetic ionospheric scintillation time series using the refactored version of the TPPSM, one can following methodology:
+
+\begin{enumerate}
+    \item Set the initial position and velocity of a receiver.
+    \item Set the date and time of the simulation in UTC.
+    \item Choose a available satellite in line-of-sight.
+    \item Set the mean drift velocity of the ionosphere in the eastward direction, which generally spans within the range of $\left[ 25, 125 \right]$ meters per second. This parameter directly affects the value of $\rho_F / v_{eff}$, which is tightly related to the intensity decorrelation time $\tau_0$.
+    \item Set the lenght of the simulation time. In general, the most common time window used in the literature to analyze real data is around 300s \cite[Figure 2]{xuTwoparameterMultifrequencyGPS2020}, \cite[Figure 3]{JiaoScintillationOnGPSSignalsForDynamicPlatforms2018}.
+    \item Set the sampling rate of the simulation. High frequency real data in general are obtained at 100 Hz \cite[Section 5]{xuTwoparameterMultifrequencyGPS2020}, \cite[Section IV, subsection A]{JiaoMultifrequencyScintillationOnGPSSignalsStaticPlatforms2018}.
+    \item Choose a set of the irregularity parameters $\left\{ U, \mu_0, p_1, p_2 \right\}$ that resembles a Weak, Moderate or Severe scattering regime.
+    \item Extrapolate the chosen irregularity parameters for multiple frequency bands if needed.
+    \item Set a simulation seed.
+    \item Simulate.
+\end{enumerate}
+
+For generating ionospheric scintillation time series for dynamic applications, where the receiver could move in any direction, we may follow the idea proposed in \cite[Figure 4]{JiaoScintillationOnGPSSignalsForDynamicPlatforms2018}, where the receiver velocity was configured in parallel and perpendicular directions with the alignment of the magnetic field.
+
+It is important to emphasize here that the TPPSM present a extremely valuable tool in the hand of GNSS researchers who are trying to develop novel receiver technologies, given that it is a physics based model that relies on a well stablished statistical and geometrical characterization.
+
+Therefore, the impact of the ionospheric scintillation, for any kind of scattering regime, on the following examples of applications can be directly assessed:
+
+\begin{itemize}
+    \item Ionospheric Scintillation Monitoring Stations
+    \item Plane Landing Systems
+    \item Drone Navigation
+    \item Ballistic Rocket Missiles Navigation
+    \item Agricultural Navigation
+\end{itemize}
