@@ -1,2 +1,2 @@
 # scintpy
-A multimodel scintillation simulator
+A multimodel scintillation simulator.
